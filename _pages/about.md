@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: <a href='#'>Brown University</a>. Address. Contacts. Moto. Etc.
 
 profile:
   align: right
@@ -13,14 +13,18 @@ profile:
     <p>123 your address street</p>
     <p>Your City, State 12345</p>
 
-news: true  # includes a list of news items
-latest_posts: true  # includes a list of the newest posts
-selected_papers: true # includes a list of papers marked as "selected={true}"
+news: false  # includes a list of news items
+latest_posts: false  # includes a list of the newest posts
+selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+Hello! I'm Hector. Thanks for stopping by. 
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+I'm currently employed as the Lab Manager of The Virtual Environment Navigation lab at Brown University. Before that, I had a number of affiliations at Arizona State University, in the Perception, Ecological Action, Robotics, and Learning Lab (PI: Dr. Michael McBeath), the Embodied Games Lab (PI: Dr. Mina Johnson Glenberg), and the METEOR Studio (PI: Dr. Robert LiKamWa). 
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+This site will function as a hybrid sort of blog/portfolio/scholarly resource. Go ahead and check out the submenus at the top to take a closer look!
+
+To characterize my interests very broadly: I aim to advance a scholarship of digitally embodied cognition and improve our understanding of humans as spatially embedded actors in information space. A mouthful, I know. 
+
+I also think that, intuitively, we should use computers in 3 dimensions. This is a future that I think we should all be excited for. 
