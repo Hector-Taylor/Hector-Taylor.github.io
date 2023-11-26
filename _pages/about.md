@@ -2,16 +2,16 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Brown University</a>. TESTING TESTING 
+subtitle: <a href='#'>Lab Manager of Virtual Environment Navigation Lab @ Brown University</a> 
 
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+    <p>215 Metcalf Research Building</p>
+    <p>190 Thayer Street</p>
+    <p>Providence, RI 02906</p>
 
 news: false  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
@@ -25,6 +25,9 @@ I'm currently employed as the Lab Manager of The Virtual Environment Navigation 
 
 This site will function as a hybrid sort of blog/portfolio/scholarly resource. Go ahead and check out the submenus at the top to take a closer look!
 
-To characterize my interests very broadly: I aim to advance a scholarship of digitally embodied cognition and improve our understanding of humans as spatially embedded actors in information space. A mouthful, I know. 
+To characterize my interests very broadly: I aim to advance a scholarship of digitally embodied cognition and improve our understanding of humans as spatially embedded actors in information space. A mouthful, I know. While I'm riffing here, I think our interactions with computers should be 3 dimensional and highly multisensory. I think this is a future to be excited about. 
 
-I also think that, intuitively, we should use computers in 3 dimensions. This is a future that I think we should all be excited for. 
+Some things I care about: 
+- Sports
+- Immersive and musical theater 
+- Videogames 
