@@ -1,10 +1,10 @@
 ---
 layout: page
-title: project 2
-description: a project with a background image and giscus comments
+title: Planetary ViSOR
+description: An immersive data visualization tool for planetary scientists to compare heterogenous datasets
 img: assets/img/3.jpg
 importance: 2
-category: work
+category: Research Software 
 giscus_comments: true
 ---
 

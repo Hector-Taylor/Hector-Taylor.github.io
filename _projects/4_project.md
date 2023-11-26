@@ -1,10 +1,10 @@
 ---
 layout: page
-title: project 4
-description: another without an image
+title: Crowd movement computer vision pipeline
+description: An end to end solution for extracting movement trajectories from any resolution video. Just bring your own CNN weights (and camera calibration parameters if possible..)
 img:
-importance: 3
-category: fun
+importance: 4
+category: Research Software
 ---
 
 Every project has a beautiful feature showcase page.

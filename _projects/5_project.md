@@ -1,10 +1,10 @@
 ---
 layout: page
-title: project 5
-description: a project with a background image
+title: Economy of Action immersive experiments
+description: My undergrad thesis - a set of experiments investigating  how your beliefs about your ability to act in a digital environment affects your perceptual judgments about that virtual environment.
 img: assets/img/1.jpg
 importance: 3
-category: fun
+category: Research software
 ---
 
 Every project has a beautiful feature showcase page.

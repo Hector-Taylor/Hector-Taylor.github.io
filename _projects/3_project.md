@@ -1,11 +1,11 @@
 ---
 layout: page
-title: project 3
-description: a project that redirects to another website
-img: assets/img/7.jpg
-redirect: https://unsplash.com
-importance: 3
-category: work
+title: VENLab Experiment generator 
+description: Immersive crowd dynamics experiment generator  
+img: assets/img/3.jpg
+importance: 2
+category: Research Software
+giscus_comments: true
 ---
 
 Every project has a beautiful feature showcase page.

@@ -1,10 +1,10 @@
 ---
 layout: page
-title: project 6
-description: a project with no image
+title: Hallmarks of Dynamical Systems Museum
+description: A set of immersive and interactive exhibits of different visualizations of dynamical systems. Built to help us consider the effect that embodied learning can have on the understanding of such topics.
 img:
 importance: 4
-category: fun
+category: Classwork
 ---
 
 Every project has a beautiful feature showcase page.

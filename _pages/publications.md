@@ -2,7 +2,7 @@
 layout: page
 permalink: /publications/
 title: publications
-description: More in the pipeline! 
+description: More in the pipeline! Many more! 
 nav: true
 nav_order: 3
 ---
