@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Brown University</a>. Address. Contacts. Moto. Etc.
+subtitle: <a href='#'>Brown University</a>. TESTING TESTING 
 
 profile:
   align: right
