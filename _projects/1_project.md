@@ -1,81 +1,82 @@
----
-layout: page
-title: COVID Campus 
-description: Public Health decsion making sim game 
-img: assets/img/COVIDsim/Homescreen.png
-importance: 2
-category: Research Software
-related_publications: 
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="styles.css">
+    <title>Project Name - Hector Taylor</title>
+</head>
+<body>
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+<!-- Navigation bar -->
+<header>
+    <div id="nav-placeholder"></div>
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+    <script>
+    fetch('nav.html')
+    .then(response => response.text())
+    .then(data => {
+        document.getElementById('nav-placeholder').outerHTML = data;
+    });
+    </script>
+</header>
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+<!-- Main Project Content -->
+<main>
+    <h1>Project Name</h1>
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+    <!-- Project Overview -->
+    <section>
+        <h2>Overview</h2>
+        <p>Project description and general overview goes here. This section can detail what the project is about, its purpose, and what problem it aimed to solve.</p>
+    </section>
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, *bled* for your project, and then... you reveal its glory in the next row of images.
+    <!-- Project Date & Collaborators -->
+    <section>
+        <h2>Details</h2>
+        <dl>
+            <dt>Date:</dt>
+            <dd>Month Year (e.g., January 2023)</dd>
 
+            <dt>Collaborators:</dt>
+            <dd>Collaborator Name 1, Collaborator Name 2, etc.</dd>
+        </dl>
+    </section>
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+    <!-- Project Media: Videos & GIFs -->
+    <section>
+        <h2>Media</h2>
+        <figure>
+            <figcaption>Project Video</figcaption>
+            <video controls width="100%">
+                <source src="path/to/your/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </figure>
 
+        <figure>
+            <figcaption>Project GIF</figcaption>
+            <img src="path/to/your/gif.gif" alt="Description of the GIF">
+        </figure>
+    </section>
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+    <!-- Project Files & Resources -->
+    <section>
+        <h2>Files & Resources</h2>
+        <ul>
+            <li><a href="path/to/file1.pdf" target="_blank">File Name 1 (e.g., Project Report)</a></li>
+            <li><a href="path/to/file2.zip" target="_blank">File Name 2 (e.g., Source Code)</a></li>
+            <!-- Add more files as needed -->
+        </ul>
+    </section>
+</main>
 
-{% raw %}
-```html
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-```
-{% endraw %}
+<!-- Footer -->
+<footer>
+    <p>&copy; 2023 Hector Taylor</p>
+</footer>
+
+</body>
+</html>
+  
