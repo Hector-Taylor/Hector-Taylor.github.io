@@ -5,21 +5,10 @@ description: An immersive data visualization tool for planetary scientists to co
 img: assets/img/3.jpg
 importance: 2
 category: Research Software 
-giscus_comments: true
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+Planetary Visor is an innovative virtual reality tool designed to merge geologic and geographic data of Mars with spectroscopy data from orbiting satellites. It offers an immersive experience that localizes Martian terrain in detailed 3D, correlating it with data from the Mars Science Laboratory Curiosity rover and the Mars 2020 Perseverance rover missions. This tool transcends traditional visualization methods, offering an intuitive understanding of the Martian landscape and its mineral composition at different scales. 
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
-
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
@@ -44,9 +33,17 @@ To give your project a background in the portfolio page, just add the img tag to
     This image can also have a caption. It's like magic.
 </div>
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, *bled* for your project, and then... you reveal its glory in the next row of images.
+Contribution: 
+Key Features: 
+Redesigned interface, developed VR Specific navigation tools, created modular workflow for VR Menu items that will be used throughout different projects - taking into account design principles from Yada yada yada UX/UI bullshit. Accepted into IEEE ‘VR 2021. 
+
+3D Terrain Visualization: Integrates images from the curiosity rover to construct a detailed 3D representation of the Martian terrain 
+Dual Data Integration: Combines VNIR spectroscopic data from orbiting satellites with ground images from Mars rovers, presenting a comprehensive view of the terrain’s physical and mineralogical aspects. 
+Immersive VR Experience: Offers an interactive VR environment that provides scientists with a realistic sense of scale and spatial orientation, which is not achievable with conventional tools.
+Seamless Dataset Rendering: Capable of rendering datasets at vastly different scales simultaneously, enhancing the understanding of the Martian landscape. 
+
+Impact and applications: 
+Mars ViSOR has implications for Mars exploration and research. It assists scientists in gaining a geometric understanding of spectral data, enriching the geological context of their studies. The tool improves navigation and scale perception in Martian terrain analysis, leading to enhanced scientific discovery. Its applications extend to ongoing Mars rover missions, contributing to better data representation and analysis. 
 
 
 <div class="row justify-content-sm-center">
