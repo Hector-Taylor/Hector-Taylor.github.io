@@ -4,204 +4,59 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <title>Hector Taylor · VR, Psychedelics, Embodiment</title>
+    <title>Hector Taylor · Synthetic Rites</title>
     <meta
       name="description"
-      content="Portfolio for Hector Taylor — VR / XR creator and psychedelic science researcher blending Unity, biosignals, and embodiment."
+      content="Minimal psychedelic playground from Hector Taylor – XR rituals, neural gardens, somatic interfaces."
     />
-    <script type="module" crossorigin src="/assets/index-BEFwG8mL.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-D4Qerffe.css">
+    <script type="module" crossorigin src="/assets/index-BBVyF0wM.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B7Sk6EXj.css">
   </head>
   <body data-mode="trip">
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
+    <canvas id="life-canvas" aria-hidden="true"></canvas>
     <div class="shader-backdrop" aria-hidden="true"></div>
 
-    <header class="site-header" id="top">
-      <div class="logo" aria-label="Hector Taylor home">
-        <span>Hector<br />Taylor</span>
+    <header class="site-frame">
+      <div class="nameplate">
+        <span class="nameplate__title">Hector Taylor</span>
+        <span class="nameplate__note">builds ritual systems &amp; synthetic psychedelia</span>
       </div>
-      <nav class="site-nav" aria-label="Primary">
-        <a href="#about">About</a>
-        <a href="#research">Research &amp; Projects</a>
-        <a href="#talks">Talks &amp; Teaching</a>
-        <a href="#writing">Writing</a>
-        <a href="#contact">Contact</a>
-      </nav>
       <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Toggle visual mode">
         Mode: Trip
       </button>
     </header>
 
-    <main id="main-content">
-      <section id="hero" class="hero" data-reveal>
-        <div class="hero-panel">
-          <p class="eyebrow">VR · Psychedelics · Embodiment Research</p>
-          <h1>Hector Taylor</h1>
-          <p class="tagline">
-            I design and study altered states of perception using virtual reality, psychedelics, biosignals, and embodied interaction.
-          </p>
-          <div class="hero-ctas">
-            <button class="btn primary" data-scroll-target="#research">View research &amp; projects</button>
-            <button class="btn ghost" data-scroll-target="#contact">Get in touch</button>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-card">
-            <p>Systems for inducing, guiding, and measuring psychedelic experiences.</p>
-            <div class="hero-card__chips">
-              <span>Unity</span>
-              <span>fNIRS</span>
-              <span>Embodiment</span>
-            </div>
-          </div>
+    <main class="layout">
+      <section class="centerpiece">
+        <p class="eyebrow">Minimal, alive, playful.</p>
+        <h1>Neural gardens &amp; somatic games.</h1>
+        <p class="caption">Click anywhere to seed new life. Tiles pulse with research fragments and tools.</p>
+        <div class="contact-links">
+          <a href="mailto:hello@hectortaylor.xyz">Email</a>
+          <a href="https://github.com/Hector-Taylor" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/hector-taylor" target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
       </section>
 
-      <section id="about" class="section about" data-reveal>
-        <div class="section-heading">
-          <p class="eyebrow">About</p>
-          <h2>Researcher, engineer, and facilitator.</h2>
-        </div>
-        <div class="about-grid">
-          <p>
-            I build immersive systems that bridge psychedelic science with cutting-edge XR. My work spans Unity prototyping, biosignal-driven feedback, embodied interaction design, and protocol design for studying altered states.
-          </p>
-          <p>
-            I collaborate with labs, founders, and clinicians to translate cognitive science insights into experiential tools—designing experiments, architecting software, and facilitating sessions that honor safety, rigor, and awe.
-          </p>
-        </div>
-      </section>
-
-      <section id="research" class="section projects" data-reveal>
-        <div class="section-heading">
-          <p class="eyebrow">Research &amp; Projects</p>
-          <h2>Selected explorations.</h2>
-        </div>
-        <div class="project-grid">
-          <article class="project-card">
-            <div>
-              <h3>Neuroadaptive VR ceremony toolkit</h3>
-              <p>Modular Unity framework that syncs fNIRS + HRV data with generative environments to guide group psychedelic sessions.</p>
-            </div>
-            <ul class="tag-list">
-              <li>VR</li>
-              <li>Unity</li>
-              <li>fNIRS</li>
-              <li>Generative art</li>
-            </ul>
-            <a href="#" class="inline-link" aria-label="Learn more about the neuroadaptive VR toolkit">Paper draft</a>
-          </article>
-
-          <article class="project-card">
-            <div>
-              <h3>Embodied protocol for microdosing studies</h3>
-              <p>Mixed-methods study aligning movement practice, breathwork, and XR biofeedback to capture qualitative shifts during microdosing.</p>
-            </div>
-            <ul class="tag-list">
-              <li>Psychedelics</li>
-              <li>Embodiment</li>
-              <li>Research design</li>
-            </ul>
-            <a href="#" class="inline-link" aria-label="Details on embodied protocol project">Research notes</a>
-          </article>
-
-          <article class="project-card">
-            <div>
-              <h3>Perception atlas</h3>
-              <p>Interactive atlas that maps ritual, pharmacology, and XR parameters to subjective qualities of altered states.</p>
-            </div>
-            <ul class="tag-list">
-              <li>Data viz</li>
-              <li>Psychedelic science</li>
-              <li>Unity</li>
-            </ul>
-            <a href="#" class="inline-link" aria-label="View perception atlas">Prototype</a>
-          </article>
-        </div>
-      </section>
-
-      <section id="talks" class="section talks" data-reveal>
-        <div class="section-heading">
-          <p class="eyebrow">Talks &amp; Teaching</p>
-          <h2>Invitations &amp; sessions.</h2>
-        </div>
-        <ul class="talk-list">
-          <li>
-            <div>
-              <h3>Designing for Altered States</h3>
-              <p>Oxford Psychedelic Society · 2024</p>
-            </div>
-            <p class="talk-note">Workshop on translating lab-grade protocols into VR journeys.</p>
-          </li>
-          <li>
-            <div>
-              <h3>Biosignals as ritual instruments</h3>
-              <p>MIT Media Lab · 2023</p>
-            </div>
-            <p class="talk-note">Lecture + live demo integrating fNIRS and Unity shaders.</p>
-          </li>
-          <li>
-            <div>
-              <h3>Facilitating awe responsibly</h3>
-              <p>EmbodyXR Cohort · 2022</p>
-            </div>
-            <p class="talk-note">Curriculum on care frameworks for psychedelic XR.</p>
-          </li>
-        </ul>
-      </section>
-
-      <section id="writing" class="section writing" data-reveal>
-        <div class="section-heading">
-          <p class="eyebrow">Writing</p>
-          <h2>Field notes &amp; essays.</h2>
-        </div>
-        <ul class="writing-list">
-          <li>
-            <div>
-              <h3>Sensing the liminal</h3>
-              <p>Substack · Essay</p>
-            </div>
-            <p class="writing-note">Design principles for contemplative XR.</p>
-          </li>
-          <li>
-            <div>
-              <h3>Protocol design for psychedelic software</h3>
-              <p>In progress</p>
-            </div>
-            <p class="writing-note">Guidelines for aligning clinical rigor with expressive media.</p>
-          </li>
-          <li>
-            <div>
-              <h3>Embodiment as interface</h3>
-              <p>Journal draft</p>
-            </div>
-            <p class="writing-note">Mapping somatic cues to adaptive visual systems.</p>
-          </li>
-        </ul>
-      </section>
-
-      <section id="contact" class="section contact" data-reveal>
-        <div class="section-heading">
-          <p class="eyebrow">Contact</p>
-          <h2>Let's build weird, responsible realities.</h2>
-        </div>
-        <p class="contact-text">
-          Interested in collaborating, inviting me to speak, or just talking weird perception experiments? Reach out—I love bringing
-          together founders, researchers, and facilitators.
-        </p>
-        <div class="contact-actions">
-          <a class="btn primary" href="mailto:hello@hectortaylor.xyz">Email me</a>
-          <a class="btn ghost" href="https://scholar.google.com" target="_blank" rel="noreferrer">Scholar</a>
-          <a class="btn ghost" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn ghost" href="https://twitter.com" target="_blank" rel="noreferrer">X / Twitter</a>
-          <a class="btn ghost" href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-        </div>
-      </section>
+      <div class="tile-cloud" data-tile-cloud>
+        <a class="tile" data-size="lg" href="#cv">CV</a>
+        <a class="tile" data-tone="ink" href="#research">Research</a>
+        <a class="tile" data-tone="glow" href="#blog">Blog</a>
+        <a class="tile" data-tone="ash" href="#experiments">Experiments</a>
+        <a class="tile" data-size="lg" data-tone="fuchsia" href="#lab-notes">Lab Notes</a>
+        <a class="tile" data-tone="acid" href="#talks">Talks</a>
+        <a class="tile" data-tone="ink" href="#press">Press</a>
+        <a class="tile" data-tone="glow" href="mailto:hello@hectortaylor.xyz">Contact</a>
+        <a class="tile" data-tone="ash" href="#archive">Archive</a>
+        <a class="tile" data-tone="acid" href="#playlists">Playlists</a>
+        <a class="tile" data-tone="ink" href="#artifacts">Artifacts</a>
+        <a class="tile" data-tone="fuchsia" href="#studio">Studio</a>
+      </div>
     </main>
 
     <footer class="site-footer">
-      <p>© <span data-year></span> Hector Taylor · Built with curiosity, code, and altered states.</p>
-      <a href="#top" class="inline-link">Back to top</a>
+      <p>© <span data-year></span> Ritual systems by Hector Taylor.</p>
     </footer>
 
   </body>
