@@ -3,61 +3,280 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <title>Hector Taylor · Synthetic Rites</title>
-    <meta
-      name="description"
-      content="Minimal psychedelic playground from Hector Taylor – XR rituals, neural gardens, somatic interfaces."
-    />
-    <script type="module" crossorigin src="/assets/index-BBVyF0wM.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-B7Sk6EXj.css">
+    <title>EXIL Shader Study</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Space+Grotesk:wght@300;400&display=swap');
+
+      :root {
+        color-scheme: only light;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        color: #f4f1ec;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #shader-web-background {
+        z-index: 0 !important;
+      }
+
+      .shader-web-background-fallback {
+        background: white;
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        padding: clamp(20px, 4vw, 56px);
+        letter-spacing: 0.02em;
+      }
+
+      .overlay__top,
+      .overlay__bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+
+      .overlay__name {
+        font-family: 'Bodoni Moda', serif;
+        font-size: clamp(32px, 5vw, 72px);
+        line-height: 0.95;
+        text-transform: uppercase;
+      }
+
+      .overlay__name span {
+        display: block;
+      }
+
+      .overlay__location {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(12px, 1.6vw, 18px);
+        text-transform: uppercase;
+        letter-spacing: 0.28em;
+      }
+
+      .overlay__notes {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(12px, 1.6vw, 16px);
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        display: flex;
+        gap: 24px;
+      }
+
+      .overlay__notes span {
+        opacity: 0.72;
+      }
+
+      .overlay__center {
+        align-self: center;
+        justify-self: center;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(10px, 1.3vw, 14px);
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        opacity: 0.75;
+      }
+
+      @media (max-width: 720px) {
+        .overlay__top,
+        .overlay__bottom {
+          flex-direction: column;
+          gap: 16px;
+          align-items: flex-start;
+        }
+
+        .overlay__notes {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .overlay__location {
+          letter-spacing: 0.2em;
+        }
+      }
+    </style>
   </head>
-  <body data-mode="trip">
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    <canvas id="life-canvas" aria-hidden="true"></canvas>
-    <div class="shader-backdrop" aria-hidden="true"></div>
-
-    <header class="site-frame">
-      <div class="nameplate">
-        <span class="nameplate__title">Hector Taylor</span>
-        <span class="nameplate__note">builds ritual systems &amp; synthetic psychedelia</span>
-      </div>
-      <button class="mode-toggle" type="button" data-mode-toggle aria-pressed="false" aria-label="Toggle visual mode">
-        Mode: Trip
-      </button>
-    </header>
-
-    <main class="layout">
-      <section class="centerpiece">
-        <p class="eyebrow">Minimal, alive, playful.</p>
-        <h1>Neural gardens &amp; somatic games.</h1>
-        <p class="caption">Click anywhere to seed new life. Tiles pulse with research fragments and tools.</p>
-        <div class="contact-links">
-          <a href="mailto:hello@hectortaylor.xyz">Email</a>
-          <a href="https://github.com/Hector-Taylor" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/in/hector-taylor" target="_blank" rel="noreferrer">LinkedIn</a>
+  <body>
+    <div class="overlay" aria-hidden="true">
+      <div class="overlay__top">
+        <div class="overlay__name">
+          <span>Hector</span>
+          <span>Taylor</span>
         </div>
-      </section>
-
-      <div class="tile-cloud" data-tile-cloud>
-        <a class="tile" data-size="lg" href="#cv">CV</a>
-        <a class="tile" data-tone="ink" href="#research">Research</a>
-        <a class="tile" data-tone="glow" href="#blog">Blog</a>
-        <a class="tile" data-tone="ash" href="#experiments">Experiments</a>
-        <a class="tile" data-size="lg" data-tone="fuchsia" href="#lab-notes">Lab Notes</a>
-        <a class="tile" data-tone="acid" href="#talks">Talks</a>
-        <a class="tile" data-tone="ink" href="#press">Press</a>
-        <a class="tile" data-tone="glow" href="mailto:hello@hectortaylor.xyz">Contact</a>
-        <a class="tile" data-tone="ash" href="#archive">Archive</a>
-        <a class="tile" data-tone="acid" href="#playlists">Playlists</a>
-        <a class="tile" data-tone="ink" href="#artifacts">Artifacts</a>
-        <a class="tile" data-tone="fuchsia" href="#studio">Studio</a>
+        <div class="overlay__location">Zürich</div>
       </div>
-    </main>
+      <div class="overlay__center">Synthetic rites</div>
+      <div class="overlay__bottom">
+        <div class="overlay__notes">
+          <span>Ritual systems</span>
+          <span>Neural gardens</span>
+          <span>Somatic interfaces</span>
+        </div>
+        <div class="overlay__location">Since 2026</div>
+      </div>
+    </div>
 
-    <footer class="site-footer">
-      <p>© <span data-year></span> Ritual systems by Hector Taylor.</p>
-    </footer>
+    <script src="/assets/shader-web-background.min.js"></script>
 
+    <script type="x-shader/x-fragment" id="Image">
+      precision highp float;
+
+      uniform vec2  iResolution;
+      uniform float iTime;
+      // ... other needed uniforms
+
+      // -- Paste your Shadertoy code here:
+
+      float n21 (vec2 p)
+      {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+
+
+      vec2 n22 (vec2 p)
+      {
+          float n = n21(p);
+          return vec2(n, n21(p+n));
+      }
+
+
+      mat2 rotate (float a) 
+      {
+          float s = sin(a);
+          float c = cos(a);
+          return mat2(c, -s, s, c);
+      }
+
+
+      vec3 diffuseLight (vec2 uv, vec3 normals, vec3 pos, vec3 col)
+      {
+          vec3 dif = pos - vec3(uv, 0.); // point light
+          //vec3 dif = pos; // directional light
+          vec3 dir = normalize(dif);
+          float intensity = 1. / length(dif); // inverse square law
+          float diffuse   = dot(normals, dir) * intensity;
+          return col * diffuse;
+      }
+
+      #define PI 3.14159265358979323846
+      #define RATIO iResolution.x / iResolution.y
+      #define POINTS 6
+      #define FORCE 2. // the larger the smaller the swirl
+      #define ROTATION 4.
+
+
+      // swirl uv at random point
+      vec2 swirl (vec2 uv, float seed, inout float acc_frc, inout vec2 acc_rot)
+      {
+          float tm = iTime * .05;
+          
+          // point
+          float n = n21(vec2(seed));
+          vec2 pnt = vec2(.5) + vec2(cos(tm + n * 423.1), sin(tm + n * 254.3) * .5);
+
+          // rotate point
+          vec2  dif = uv - pnt;
+          float dis = length(dif);
+          float frc = smoothstep(.0, 1., exp(dis * -FORCE) * (cos(dis * 10.) * .5 + .5));
+          float swl = frc * sin(tm + n * 624.8) * ROTATION; 
+          vec2  rot = dif * rotate(swl);
+
+          // for normal map
+          acc_frc += frc;
+          acc_rot += rot * frc; 
+
+          // rotated uv
+          return rot + pnt;
+      }
+
+
+      vec3 offsetLights (vec2 uv, vec3 normals)
+      {
+          float tm  = iTime * .1;
+          float off = 1.3; // offset
+          float sth = .5; // strength
+          float amb = .5; // ambient
+          float rad = 1.; // radius
+          vec3 pos  = vec3(.5, .5, 1.);
+          
+          float o2 = 1. * off;
+          float o3 = 2. * off;
+          
+          vec3 p1 = vec3(pos.x + cos(tm) * rad, pos.y + sin(tm + 0.) * rad, pos.z);
+          vec3 p2 = vec3(pos.x + cos(tm + o2) * rad, pos.y + sin(tm + o2) * rad, pos.z);
+          vec3 p3 = vec3(pos.x + cos(tm + o3) * rad, pos.y + sin(tm + o3) * rad, pos.z);
+          
+          vec3 l1 = diffuseLight(uv, normals, p1, vec3(sth, 0., 0.));
+          vec3 l2 = diffuseLight(uv, normals, p2, vec3(0., sth, 0.));
+          vec3 l3 = diffuseLight(uv, normals, p3, vec3(0., 0., sth));
+          
+          return l1 + l2 + l3 + amb;
+      }
+
+
+      void mainImage( out vec4 fragColor, in vec2 fragCoord )
+      {
+          vec2 uv = (fragCoord / iResolution.xy - .5) * vec2(RATIO, 1.) + .5;
+          vec3 col = vec3(0.);
+          float tm = iTime;
+            
+          // reclusively swirl th uv
+          float acc_frc = .0;
+          vec2  acc_rot = vec2(0.);
+          vec2  sv = uv;
+          for (int i = 0; i < POINTS; i++)
+              sv = swirl(sv, fract(float(i+1) * 123.45), acc_frc, acc_rot);
+
+          // normal map
+          vec3 normal = normalize(vec3(acc_rot, acc_frc * .01));
+          
+          // light
+          vec3 diffuse   = offsetLights(uv, normal);
+          vec3 specular  = smoothstep(.85, .95, diffuse);
+          vec3 light     = diffuse + specular;
+          
+          //col = light;
+          //col = normal;
+          col = light + sin(light * PI) - light; // Let's make it a bit more interesting
+      
+          fragColor = vec4(col,1.0);
+      }
+
+      // -- End of Shadertoy code
+        
+        
+      void main() {
+        mainImage(gl_FragColor, gl_FragCoord.xy);
+      }
+    </script>
+
+    <script>
+      shaderWebBackground.shade({
+        shaders: {
+          Image: {
+            uniforms: {
+              iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height),
+              iTime:       (gl, loc) => gl.uniform1f(loc, performance.now() / 1000),
+            }
+          }
+        }
+      });
+    </script>
   </body>
 </html>
