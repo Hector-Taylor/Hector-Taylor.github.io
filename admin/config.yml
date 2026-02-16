@@ -1,0 +1,28 @@
+backend:
+  name: git-gateway
+  branch: master
+
+local_backend: true
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+collections:
+  - name: "album"
+    label: "Photo Album"
+    format: "json"
+    extension: "json"
+    files:
+      - name: "entries"
+        label: "Entries"
+        file: "content/photos.json"
+        fields:
+          - label: "Items"
+            name: "items"
+            widget: "list"
+            fields:
+              - { label: "Image", name: "image", widget: "image" }
+              - { label: "Title", name: "title", widget: "string", required: false }
+              - { label: "Location", name: "location", widget: "string", required: false }
+              - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, required: false }
+              - { label: "Notes", name: "notes", widget: "text", required: false }
