@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shader Lab</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: #050608;
+      }
+      #shader-web-background { z-index: 0 !important; }
+      .shader-web-background-fallback { background: #050608; }
+
+      .panel {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        width: min(470px, calc(100vw - 32px));
+        max-height: calc(100vh - 32px);
+        overflow: auto;
+        z-index: 2;
+        background: rgba(12, 14, 20, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 14px;
+        padding: 14px;
+        backdrop-filter: blur(10px);
+      }
+      .title { margin: 0 0 4px; font-size: 18px; color: #eef3ff; }
+      .sub { margin: 0 0 12px; font-size: 12px; color: #aeb8cc; }
+      .section-title {
+        margin: 14px 0 8px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #96a4c2;
+      }
+      .grid { display: grid; grid-template-columns: 1fr; gap: 9px; }
+      .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+      label { font-size: 12px; color: #d6dded; }
+      input[type='range'] { width: 100%; }
+      .v { font-size: 11px; color: #8fa0c4; min-width: 56px; text-align: right; }
+
+      .color-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+      .color-item {
+        display: grid;
+        grid-template-columns: auto 46px 1fr;
+        gap: 8px;
+        align-items: center;
+      }
+      input[type='color'] {
+        width: 40px;
+        height: 28px;
+        border: none;
+        background: transparent;
+        padding: 0;
+      }
+      .hex {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.04);
+        color: #eaf0ff;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-size: 12px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .hex.invalid { border-color: rgba(255, 91, 122, 0.7); }
+
+      .palette-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      button, a.btn {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05);
+        color: #eaf0ff;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        text-decoration: none;
+      }
+      button:hover, a.btn:hover { border-color: rgba(255, 255, 255, 0.45); }
+      .status { margin-top: 8px; font-size: 11px; color: #9fb2da; min-height: 16px; }
+    </style>
+  </head>
+  <body>
+    <aside class="panel">
+      <h1 class="title">Shader Lab</h1>
+      <p class="sub">Tune live, paste hex palettes, then export baked GLSL or JSON preset.</p>
+
+      <div class="section-title">Flow</div>
+      <div class="grid">
+        <div class="row"><label for="points">Points</label><span class="v" id="points-v"></span></div>
+        <input id="points" type="range" min="1" max="14" step="1" value="6" />
+
+        <div class="row"><label for="force">Force</label><span class="v" id="force-v"></span></div>
+        <input id="force" type="range" min="0.2" max="6" step="0.01" value="2" />
+
+        <div class="row"><label for="rotation">Rotation</label><span class="v" id="rotation-v"></span></div>
+        <input id="rotation" type="range" min="0" max="12" step="0.01" value="4" />
+
+        <div class="row"><label for="swirlFreq">Swirl Frequency</label><span class="v" id="swirlFreq-v"></span></div>
+        <input id="swirlFreq" type="range" min="2" max="22" step="0.1" value="10" />
+
+        <div class="row"><label for="speed">Speed</label><span class="v" id="speed-v"></span></div>
+        <input id="speed" type="range" min="0.1" max="4" step="0.01" value="1" />
+
+        <div class="row"><label for="zoom">Zoom</label><span class="v" id="zoom-v"></span></div>
+        <input id="zoom" type="range" min="0.5" max="2" step="0.01" value="1" />
+
+        <div class="row"><label for="drift">Drift</label><span class="v" id="drift-v"></span></div>
+        <input id="drift" type="range" min="0" max="0.06" step="0.001" value="0" />
+      </div>
+
+      <div class="section-title">Light And Surface</div>
+      <div class="grid">
+        <div class="row"><label for="strength">Light Strength</label><span class="v" id="strength-v"></span></div>
+        <input id="strength" type="range" min="0" max="1.6" step="0.01" value="0.5" />
+
+        <div class="row"><label for="ambient">Ambient</label><span class="v" id="ambient-v"></span></div>
+        <input id="ambient" type="range" min="0" max="1" step="0.01" value="0.5" />
+
+        <div class="row"><label for="offset">Light Offset</label><span class="v" id="offset-v"></span></div>
+        <input id="offset" type="range" min="0.2" max="3.5" step="0.01" value="1.3" />
+
+        <div class="row"><label for="radius">Orbit Radius</label><span class="v" id="radius-v"></span></div>
+        <input id="radius" type="range" min="0.2" max="2.2" step="0.01" value="1" />
+
+        <div class="row"><label for="normalScale">Normal Scale</label><span class="v" id="normalScale-v"></span></div>
+        <input id="normalScale" type="range" min="0.001" max="0.06" step="0.001" value="0.01" />
+
+        <div class="row"><label for="specLow">Specular Low</label><span class="v" id="specLow-v"></span></div>
+        <input id="specLow" type="range" min="0.4" max="0.99" step="0.005" value="0.85" />
+
+        <div class="row"><label for="specHigh">Specular High</label><span class="v" id="specHigh-v"></span></div>
+        <input id="specHigh" type="range" min="0.5" max="1.2" step="0.005" value="0.95" />
+      </div>
+
+      <div class="section-title">Color</div>
+      <div class="grid">
+        <div class="row"><label for="cycleSpeed">Color Cycle Speed</label><span class="v" id="cycleSpeed-v"></span></div>
+        <input id="cycleSpeed" type="range" min="0" max="4" step="0.01" value="0" />
+
+        <div class="row"><label for="cycleAmount">Color Cycle Amount</label><span class="v" id="cycleAmount-v"></span></div>
+        <input id="cycleAmount" type="range" min="0" max="1" step="0.01" value="0" />
+
+        <div class="row"><label for="gain">Gain</label><span class="v" id="gain-v"></span></div>
+        <input id="gain" type="range" min="0.2" max="2.5" step="0.01" value="1" />
+
+        <div class="row"><label for="gamma">Gamma</label><span class="v" id="gamma-v"></span></div>
+        <input id="gamma" type="range" min="0.4" max="2.4" step="0.01" value="1" />
+
+        <div class="row"><label for="accentMix">Accent Mix</label><span class="v" id="accentMix-v"></span></div>
+        <input id="accentMix" type="range" min="0" max="1" step="0.01" value="0" />
+      </div>
+
+      <div class="section-title">Psychedelic FX</div>
+      <div class="grid">
+        <div class="row"><label for="hueShift">Hue Shift</label><span class="v" id="hueShift-v"></span></div>
+        <input id="hueShift" type="range" min="-1" max="1" step="0.01" value="0" />
+
+        <div class="row"><label for="huePulse">Hue Pulse</label><span class="v" id="huePulse-v"></span></div>
+        <input id="huePulse" type="range" min="0" max="1" step="0.01" value="0" />
+
+        <div class="row"><label for="saturation">Saturation</label><span class="v" id="saturation-v"></span></div>
+        <input id="saturation" type="range" min="0" max="2.2" step="0.01" value="1" />
+
+        <div class="row"><label for="contrast">Contrast</label><span class="v" id="contrast-v"></span></div>
+        <input id="contrast" type="range" min="0.2" max="2.5" step="0.01" value="1" />
+
+        <div class="row"><label for="brightness">Brightness</label><span class="v" id="brightness-v"></span></div>
+        <input id="brightness" type="range" min="-0.4" max="0.4" step="0.01" value="0" />
+
+        <div class="row"><label for="posterize">Posterize Steps</label><span class="v" id="posterize-v"></span></div>
+        <input id="posterize" type="range" min="1" max="32" step="1" value="32" />
+
+        <div class="row"><label for="posterizeMix">Posterize Mix</label><span class="v" id="posterizeMix-v"></span></div>
+        <input id="posterizeMix" type="range" min="0" max="1" step="0.01" value="0" />
+
+        <div class="row"><label for="grain">Grain</label><span class="v" id="grain-v"></span></div>
+        <input id="grain" type="range" min="0" max="0.25" step="0.001" value="0" />
+
+        <div class="row"><label for="vignette">Vignette</label><span class="v" id="vignette-v"></span></div>
+        <input id="vignette" type="range" min="0" max="1" step="0.01" value="0" />
+      </div>
+
+      <div class="section-title">Palette</div>
+      <div class="color-grid">
+        <div class="color-item"><label for="c1">Color 1</label><input id="c1" type="color" value="#ff0000" /><input id="c1hex" class="hex" type="text" value="#ff0000" /></div>
+        <div class="color-item"><label for="c2">Color 2</label><input id="c2" type="color" value="#00ff00" /><input id="c2hex" class="hex" type="text" value="#00ff00" /></div>
+        <div class="color-item"><label for="c3">Color 3</label><input id="c3" type="color" value="#0000ff" /><input id="c3hex" class="hex" type="text" value="#0000ff" /></div>
+        <div class="color-item"><label for="bg">Base Tint</label><input id="bg" type="color" value="#000000" /><input id="bghex" class="hex" type="text" value="#000000" /></div>
+        <div class="color-item"><label for="accent">Accent</label><input id="accent" type="color" value="#ff49a8" /><input id="accenthex" class="hex" type="text" value="#ff49a8" /></div>
+      </div>
+
+      <div class="palette-row" style="margin-top:8px;">
+        <input id="palette" class="hex" type="text" placeholder="#ff0000, #00ff00, #0000ff, #000000, #ff49a8" />
+        <button id="apply-palette" type="button">Apply</button>
+      </div>
+
+      <div class="actions">
+        <button id="copy-glsl" type="button">Copy GLSL</button>
+        <button id="download-glsl" type="button">Download GLSL</button>
+        <button id="copy-json" type="button">Copy JSON Preset</button>
+        <button id="reset" type="button">Reset</button>
+        <a class="btn" href="/" target="_blank" rel="noreferrer">Open Home</a>
+      </div>
+      <div class="status" id="status"></div>
+    </aside>
+
+    <script src="/assets/shader-web-background.min.js"></script>
+
+    <script type="x-shader/x-fragment" id="Image">
+      precision highp float;
+
+      uniform vec2  iResolution;
+      uniform float iTime;
+      uniform float uPoints;
+      uniform float uForce;
+      uniform float uRotation;
+      uniform float uSwirlFreq;
+      uniform float uSpeed;
+      uniform float uStrength;
+      uniform float uAmbient;
+      uniform float uOffset;
+      uniform float uRadius;
+      uniform float uNormalScale;
+      uniform float uSpecLow;
+      uniform float uSpecHigh;
+      uniform float uZoom;
+      uniform float uDrift;
+      uniform float uCycleSpeed;
+      uniform float uCycleAmount;
+      uniform float uGain;
+      uniform float uGamma;
+      uniform float uAccentMix;
+      uniform float uHueShift;
+      uniform float uHuePulse;
+      uniform float uSaturation;
+      uniform float uContrast;
+      uniform float uBrightness;
+      uniform float uPosterize;
+      uniform float uPosterizeMix;
+      uniform float uGrain;
+      uniform float uVignette;
+      uniform vec3 uColor1;
+      uniform vec3 uColor2;
+      uniform vec3 uColor3;
+      uniform vec3 uBase;
+      uniform vec3 uAccent;
+
+      float n21 (vec2 p)
+      {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+
+      mat2 rotate (float a)
+      {
+          float s = sin(a);
+          float c = cos(a);
+          return mat2(c, -s, s, c);
+      }
+
+      vec3 diffuseLight (vec2 uv, vec3 normals, vec3 pos, vec3 col)
+      {
+          vec3 dif = pos - vec3(uv, 0.);
+          vec3 dir = normalize(dif);
+          float intensity = 1. / length(dif);
+          float diffuse   = dot(normals, dir) * intensity;
+          return col * diffuse;
+      }
+
+      #define PI 3.14159265358979323846
+      #define RATIO iResolution.x / iResolution.y
+      #define MAX_POINTS 20
+
+      vec2 swirl (vec2 uv, float seed, inout float acc_frc, inout vec2 acc_rot)
+      {
+          float tm = iTime * .05 * uSpeed;
+          float n = n21(vec2(seed));
+          vec2 pnt = vec2(.5) + vec2(cos(tm + n * 423.1), sin(tm + n * 254.3) * .5);
+
+          vec2  dif = uv - pnt;
+          float dis = length(dif);
+          float wave = cos(dis * uSwirlFreq + iTime * .2 * uSpeed);
+          float frc = smoothstep(.0, 1., exp(dis * -uForce) * (wave * .5 + .5));
+          float swl = frc * sin(tm + n * 624.8) * uRotation;
+          vec2  rot = dif * rotate(swl);
+
+          acc_frc += frc;
+          acc_rot += rot * frc;
+          return rot + pnt;
+      }
+
+      vec3 cycleColor(vec3 a, vec3 b, float phase)
+      {
+          float t = .5 + .5 * sin(phase);
+          return mix(a, b, t);
+      }
+
+      vec3 rgb2hsv(vec3 c)
+      {
+          vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+          vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+          vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+          float d = q.x - min(q.w, q.y);
+          float e = 1.0e-10;
+          return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+      }
+
+      vec3 hsv2rgb(vec3 c)
+      {
+          vec3 p = abs(fract(c.xxx + vec3(0.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
+          return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);
+      }
+
+      vec3 applyFx(vec3 col, vec2 uv)
+      {
+          vec3 hsv = rgb2hsv(max(col, vec3(0.0)));
+          hsv.x = fract(hsv.x + uHueShift + sin(iTime * (0.35 + uHuePulse * 4.0)) * (uHuePulse * 0.25));
+          hsv.y = clamp(hsv.y * uSaturation, 0.0, 1.0);
+          col = hsv2rgb(hsv);
+
+          col = (col - 0.5) * uContrast + 0.5;
+          col += uBrightness;
+
+          float steps = max(1.0, uPosterize);
+          vec3 poster = floor(max(col, vec3(0.0)) * steps) / steps;
+          col = mix(col, poster, uPosterizeMix);
+
+          float radial = length((uv - 0.5) * vec2(RATIO, 1.0));
+          float v = 1.0 - smoothstep(0.15, 0.95, radial);
+          col *= mix(1.0, v, uVignette);
+
+          float grain = (n21(uv * iResolution.xy + iTime * 37.0) - 0.5) * uGrain;
+          col += grain;
+
+          return max(col, vec3(0.0));
+      }
+
+      vec3 offsetLights (vec2 uv, vec3 normals)
+      {
+          float tm  = iTime * .1 * uSpeed;
+          vec3 pos  = vec3(.5, .5, 1.);
+
+          float o2 = 1. * uOffset;
+          float o3 = 2. * uOffset;
+
+          vec3 p1 = vec3(pos.x + cos(tm) * uRadius, pos.y + sin(tm + 0.) * uRadius, pos.z);
+          vec3 p2 = vec3(pos.x + cos(tm + o2) * uRadius, pos.y + sin(tm + o2) * uRadius, pos.z);
+          vec3 p3 = vec3(pos.x + cos(tm + o3) * uRadius, pos.y + sin(tm + o3) * uRadius, pos.z);
+
+          float cps = tm * 6.283 * max(0.001, uCycleSpeed);
+          vec3 c1 = mix(uColor1, cycleColor(uColor1, uColor2, cps + 0.0), uCycleAmount);
+          vec3 c2 = mix(uColor2, cycleColor(uColor2, uColor3, cps + 1.7), uCycleAmount);
+          vec3 c3 = mix(uColor3, cycleColor(uColor3, uColor1, cps + 3.4), uCycleAmount);
+
+          vec3 l1 = diffuseLight(uv, normals, p1, c1 * uStrength);
+          vec3 l2 = diffuseLight(uv, normals, p2, c2 * uStrength);
+          vec3 l3 = diffuseLight(uv, normals, p3, c3 * uStrength);
+
+          return l1 + l2 + l3 + (uBase * uAmbient);
+      }
+
+      void mainImage( out vec4 fragColor, in vec2 fragCoord )
+      {
+          vec2 uv = (fragCoord / iResolution.xy - .5) * vec2(RATIO, 1.) / max(0.001, uZoom) + .5;
+          uv += vec2(sin(iTime * .13), cos(iTime * .11)) * uDrift;
+
+          float acc_frc = .0;
+          vec2  acc_rot = vec2(0.);
+          vec2  sv = uv;
+          for (int i = 0; i < MAX_POINTS; i++) {
+              if (float(i) >= uPoints) break;
+              sv = swirl(sv, fract(float(i+1) * 123.45), acc_frc, acc_rot);
+          }
+
+          vec3 normal = normalize(vec3(acc_rot, max(1e-4, acc_frc * uNormalScale)));
+
+          vec3 diffuse   = offsetLights(uv, normal);
+          vec3 specular  = smoothstep(uSpecLow, uSpecHigh, diffuse);
+          vec3 light     = diffuse + specular;
+
+          vec3 col = light + sin(light * PI) - light;
+          col *= uGain;
+
+          float iAvg = clamp((col.r + col.g + col.b) / 3., 0., 1.);
+          col = mix(col, uAccent, uAccentMix * smoothstep(.45, 1.2, iAvg));
+          col = pow(max(col, vec3(0.0)), vec3(1.0 / max(0.001, uGamma)));
+          col = applyFx(col, uv);
+
+          fragColor = vec4(col,1.0);
+      }
+
+      void main() {
+        mainImage(gl_FragColor, gl_FragCoord.xy);
+      }
+    </script>
+
+    <script>
+      const defaults = {
+        points: 6,
+        force: 2,
+        rotation: 4,
+        swirlFreq: 10,
+        speed: 1,
+        zoom: 1,
+        drift: 0,
+        strength: 0.5,
+        ambient: 0.5,
+        offset: 1.3,
+        radius: 1,
+        normalScale: 0.01,
+        specLow: 0.85,
+        specHigh: 0.95,
+        cycleSpeed: 0,
+        cycleAmount: 0,
+        gain: 1,
+        gamma: 1,
+        accentMix: 0,
+        hueShift: 0,
+        huePulse: 0,
+        saturation: 1,
+        contrast: 1,
+        brightness: 0,
+        posterize: 32,
+        posterizeMix: 0,
+        grain: 0,
+        vignette: 0,
+        c1: '#ff0000',
+        c2: '#00ff00',
+        c3: '#0000ff',
+        bg: '#000000',
+        accent: '#ff49a8',
+      };
+
+      const state = { ...defaults };
+      const sliderIds = [
+        'points','force','rotation','swirlFreq','speed','zoom','drift','strength','ambient','offset','radius',
+        'normalScale','specLow','specHigh','cycleSpeed','cycleAmount','gain','gamma','accentMix',
+        'hueShift','huePulse','saturation','contrast','brightness','posterize','posterizeMix','grain','vignette'
+      ];
+      const colorIds = ['c1', 'c2', 'c3', 'bg', 'accent'];
+      const status = document.getElementById('status');
+
+      function normalizeHex(input) {
+        const trimmed = input.trim();
+        const m6 = trimmed.match(/^#?([0-9a-fA-F]{6})$/);
+        if (m6) return `#${m6[1].toLowerCase()}`;
+        const m3 = trimmed.match(/^#?([0-9a-fA-F]{3})$/);
+        if (!m3) return null;
+        const [r, g, b] = m3[1].toLowerCase().split('');
+        return `#${r}${r}${g}${g}${b}${b}`;
+      }
+
+      function hexToRgb01(hex) {
+        const h = hex.replace('#', '');
+        const v = parseInt(h, 16);
+        return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+      }
+
+      function setStatus(msg) {
+        status.textContent = msg;
+        setTimeout(() => {
+          if (status.textContent === msg) status.textContent = '';
+        }, 2200);
+      }
+
+      function syncUI() {
+        sliderIds.forEach((id) => {
+          const el = document.getElementById(id);
+          el.value = state[id];
+          const out = document.getElementById(`${id}-v`);
+          if (out) out.textContent = Number(state[id]).toFixed(3).replace(/\.000$/, '');
+        });
+
+        colorIds.forEach((id) => {
+          document.getElementById(id).value = state[id];
+          const hexEl = document.getElementById(`${id}hex`);
+          hexEl.value = state[id];
+          hexEl.classList.remove('invalid');
+        });
+      }
+
+      sliderIds.forEach((id) => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => {
+          state[id] = parseFloat(el.value);
+          const out = document.getElementById(`${id}-v`);
+          if (out) out.textContent = Number(state[id]).toFixed(3).replace(/\.000$/, '');
+        });
+      });
+
+      colorIds.forEach((id) => {
+        const picker = document.getElementById(id);
+        const hexEl = document.getElementById(`${id}hex`);
+
+        picker.addEventListener('input', () => {
+          state[id] = picker.value;
+          hexEl.value = picker.value;
+          hexEl.classList.remove('invalid');
+        });
+
+        hexEl.addEventListener('input', () => {
+          const hx = normalizeHex(hexEl.value);
+          if (!hx) {
+            hexEl.classList.add('invalid');
+            return;
+          }
+          hexEl.classList.remove('invalid');
+          state[id] = hx;
+          picker.value = hx;
+          hexEl.value = hx;
+        });
+      });
+
+      document.getElementById('apply-palette').addEventListener('click', () => {
+        const src = document.getElementById('palette').value;
+        const found = src
+          .split(/[\s,;|/]+/)
+          .map((token) => normalizeHex(token))
+          .filter(Boolean);
+        if (found.length < 3) {
+          setStatus('Paste at least 3 hex colors');
+          return;
+        }
+        const mapped = [
+          found[0] || state.c1,
+          found[1] || state.c2,
+          found[2] || state.c3,
+          found[3] || state.bg,
+          found[4] || state.accent,
+        ];
+        [state.c1, state.c2, state.c3, state.bg, state.accent] = mapped;
+        syncUI();
+        setStatus('Palette applied');
+      });
+
+      document.getElementById('reset').addEventListener('click', () => {
+        Object.assign(state, defaults);
+        syncUI();
+        setStatus('Reset to defaults');
+      });
+
+      function buildExportShader() {
+        const [r1, g1, b1] = hexToRgb01(state.c1);
+        const [r2, g2, b2] = hexToRgb01(state.c2);
+        const [r3, g3, b3] = hexToRgb01(state.c3);
+        const [rb, gb, bb] = hexToRgb01(state.bg);
+        const [ra, ga, ba] = hexToRgb01(state.accent);
+
+        return `precision highp float;
+
+uniform vec2  iResolution;
+uniform float iTime;
+
+float n21 (vec2 p)
+{
+    return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+mat2 rotate (float a)
+{
+    float s = sin(a);
+    float c = cos(a);
+    return mat2(c, -s, s, c);
+}
+
+vec3 diffuseLight (vec2 uv, vec3 normals, vec3 pos, vec3 col)
+{
+    vec3 dif = pos - vec3(uv, 0.);
+    vec3 dir = normalize(dif);
+    float intensity = 1. / length(dif);
+    float diffuse   = dot(normals, dir) * intensity;
+    return col * diffuse;
+}
+
+#define PI 3.14159265358979323846
+#define RATIO iResolution.x / iResolution.y
+#define POINTS ${Math.round(state.points)}
+#define FORCE ${state.force.toFixed(4)}
+#define ROTATION ${state.rotation.toFixed(4)}
+#define SWIRL_FREQ ${state.swirlFreq.toFixed(4)}
+#define SPEED ${state.speed.toFixed(4)}
+#define ZOOM ${state.zoom.toFixed(4)}
+#define DRIFT ${state.drift.toFixed(4)}
+#define LIGHT_STRENGTH ${state.strength.toFixed(4)}
+#define AMBIENT ${state.ambient.toFixed(4)}
+#define OFFSET ${state.offset.toFixed(4)}
+#define RADIUS ${state.radius.toFixed(4)}
+#define NORMAL_SCALE ${state.normalScale.toFixed(4)}
+#define SPEC_LOW ${state.specLow.toFixed(4)}
+#define SPEC_HIGH ${state.specHigh.toFixed(4)}
+#define CYCLE_SPEED ${state.cycleSpeed.toFixed(4)}
+#define CYCLE_AMOUNT ${state.cycleAmount.toFixed(4)}
+#define GAIN ${state.gain.toFixed(4)}
+#define GAMMA ${state.gamma.toFixed(4)}
+#define ACCENT_MIX ${state.accentMix.toFixed(4)}
+#define HUE_SHIFT ${state.hueShift.toFixed(4)}
+#define HUE_PULSE ${state.huePulse.toFixed(4)}
+#define SATURATION ${state.saturation.toFixed(4)}
+#define CONTRAST ${state.contrast.toFixed(4)}
+#define BRIGHTNESS ${state.brightness.toFixed(4)}
+#define POSTERIZE ${state.posterize.toFixed(4)}
+#define POSTERIZE_MIX ${state.posterizeMix.toFixed(4)}
+#define GRAIN ${state.grain.toFixed(4)}
+#define VIGNETTE ${state.vignette.toFixed(4)}
+
+const vec3 COLOR_1 = vec3(${r1.toFixed(6)}, ${g1.toFixed(6)}, ${b1.toFixed(6)});
+const vec3 COLOR_2 = vec3(${r2.toFixed(6)}, ${g2.toFixed(6)}, ${b2.toFixed(6)});
+const vec3 COLOR_3 = vec3(${r3.toFixed(6)}, ${g3.toFixed(6)}, ${b3.toFixed(6)});
+const vec3 BASE_TINT = vec3(${rb.toFixed(6)}, ${gb.toFixed(6)}, ${bb.toFixed(6)});
+const vec3 ACCENT = vec3(${ra.toFixed(6)}, ${ga.toFixed(6)}, ${ba.toFixed(6)});
+
+vec2 swirl (vec2 uv, float seed, inout float acc_frc, inout vec2 acc_rot)
+{
+    float tm = iTime * .05 * SPEED;
+    float n = n21(vec2(seed));
+    vec2 pnt = vec2(.5) + vec2(cos(tm + n * 423.1), sin(tm + n * 254.3) * .5);
+
+    vec2  dif = uv - pnt;
+    float dis = length(dif);
+    float wave = cos(dis * SWIRL_FREQ + iTime * .2 * SPEED);
+    float frc = smoothstep(.0, 1., exp(dis * -FORCE) * (wave * .5 + .5));
+    float swl = frc * sin(tm + n * 624.8) * ROTATION;
+    vec2  rot = dif * rotate(swl);
+
+    acc_frc += frc;
+    acc_rot += rot * frc;
+    return rot + pnt;
+}
+
+vec3 cycleColor(vec3 a, vec3 b, float phase)
+{
+    float t = .5 + .5 * sin(phase);
+    return mix(a, b, t);
+}
+
+vec3 rgb2hsv(vec3 c)
+{
+    vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+    vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+    float d = q.x - min(q.w, q.y);
+    float e = 1.0e-10;
+    return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+}
+
+vec3 hsv2rgb(vec3 c)
+{
+    vec3 p = abs(fract(c.xxx + vec3(0.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
+    return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);
+}
+
+vec3 applyFx(vec3 col, vec2 uv)
+{
+    vec3 hsv = rgb2hsv(max(col, vec3(0.0)));
+    hsv.x = fract(hsv.x + HUE_SHIFT + sin(iTime * (0.35 + HUE_PULSE * 4.0)) * (HUE_PULSE * 0.25));
+    hsv.y = clamp(hsv.y * SATURATION, 0.0, 1.0);
+    col = hsv2rgb(hsv);
+
+    col = (col - 0.5) * CONTRAST + 0.5;
+    col += BRIGHTNESS;
+
+    float steps = max(1.0, POSTERIZE);
+    vec3 poster = floor(max(col, vec3(0.0)) * steps) / steps;
+    col = mix(col, poster, POSTERIZE_MIX);
+
+    float radial = length((uv - 0.5) * vec2(RATIO, 1.0));
+    float v = 1.0 - smoothstep(0.15, 0.95, radial);
+    col *= mix(1.0, v, VIGNETTE);
+
+    float grain = (n21(uv * iResolution.xy + iTime * 37.0) - 0.5) * GRAIN;
+    col += grain;
+
+    return max(col, vec3(0.0));
+}
+
+vec3 offsetLights (vec2 uv, vec3 normals)
+{
+    float tm  = iTime * .1 * SPEED;
+    vec3 pos  = vec3(.5, .5, 1.);
+
+    float o2 = 1. * OFFSET;
+    float o3 = 2. * OFFSET;
+
+    vec3 p1 = vec3(pos.x + cos(tm) * RADIUS, pos.y + sin(tm + 0.) * RADIUS, pos.z);
+    vec3 p2 = vec3(pos.x + cos(tm + o2) * RADIUS, pos.y + sin(tm + o2) * RADIUS, pos.z);
+    vec3 p3 = vec3(pos.x + cos(tm + o3) * RADIUS, pos.y + sin(tm + o3) * RADIUS, pos.z);
+
+    float cps = tm * 6.283 * max(0.001, CYCLE_SPEED);
+    vec3 c1 = mix(COLOR_1, cycleColor(COLOR_1, COLOR_2, cps + 0.0), CYCLE_AMOUNT);
+    vec3 c2 = mix(COLOR_2, cycleColor(COLOR_2, COLOR_3, cps + 1.7), CYCLE_AMOUNT);
+    vec3 c3 = mix(COLOR_3, cycleColor(COLOR_3, COLOR_1, cps + 3.4), CYCLE_AMOUNT);
+
+    vec3 l1 = diffuseLight(uv, normals, p1, c1 * LIGHT_STRENGTH);
+    vec3 l2 = diffuseLight(uv, normals, p2, c2 * LIGHT_STRENGTH);
+    vec3 l3 = diffuseLight(uv, normals, p3, c3 * LIGHT_STRENGTH);
+
+    return l1 + l2 + l3 + (BASE_TINT * AMBIENT);
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    vec2 uv = (fragCoord / iResolution.xy - .5) * vec2(RATIO, 1.) / max(0.001, ZOOM) + .5;
+    uv += vec2(sin(iTime * .13), cos(iTime * .11)) * DRIFT;
+
+    float acc_frc = .0;
+    vec2  acc_rot = vec2(0.);
+    vec2  sv = uv;
+    for (int i = 0; i < POINTS; i++)
+        sv = swirl(sv, fract(float(i+1) * 123.45), acc_frc, acc_rot);
+
+    vec3 normal = normalize(vec3(acc_rot, max(1e-4, acc_frc * NORMAL_SCALE)));
+
+    vec3 diffuse   = offsetLights(uv, normal);
+    vec3 specular  = smoothstep(SPEC_LOW, SPEC_HIGH, diffuse);
+    vec3 light     = diffuse + specular;
+
+    vec3 col = light + sin(light * PI) - light;
+    col *= GAIN;
+
+    float iAvg = clamp((col.r + col.g + col.b) / 3., 0., 1.);
+    col = mix(col, ACCENT, ACCENT_MIX * smoothstep(.45, 1.2, iAvg));
+    col = pow(max(col, vec3(0.0)), vec3(1.0 / max(0.001, GAMMA)));
+    col = applyFx(col, uv);
+
+    fragColor = vec4(col,1.0);
+}
+
+void main() {
+  mainImage(gl_FragColor, gl_FragCoord.xy);
+}`;
+      }
+
+      async function copyText(text, okMsg) {
+        await navigator.clipboard.writeText(text);
+        setStatus(okMsg);
+      }
+
+      document.getElementById('copy-glsl').addEventListener('click', async () => {
+        try {
+          await copyText(buildExportShader(), 'GLSL copied');
+        } catch {
+          setStatus('Clipboard blocked');
+        }
+      });
+
+      document.getElementById('download-glsl').addEventListener('click', () => {
+        const blob = new Blob([buildExportShader()], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'custom-shader.glsl';
+        a.click();
+        URL.revokeObjectURL(url);
+        setStatus('GLSL downloaded');
+      });
+
+      document.getElementById('copy-json').addEventListener('click', async () => {
+        try {
+          await copyText(JSON.stringify(state, null, 2), 'Preset JSON copied');
+        } catch {
+          setStatus('Clipboard blocked');
+        }
+      });
+
+      syncUI();
+
+      shaderWebBackground.shade({
+        shaders: {
+          Image: {
+            uniforms: {
+              iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height),
+              iTime: (gl, loc) => gl.uniform1f(loc, performance.now() / 1000),
+              uPoints: (gl, loc) => gl.uniform1f(loc, state.points),
+              uForce: (gl, loc) => gl.uniform1f(loc, state.force),
+              uRotation: (gl, loc) => gl.uniform1f(loc, state.rotation),
+              uSwirlFreq: (gl, loc) => gl.uniform1f(loc, state.swirlFreq),
+              uSpeed: (gl, loc) => gl.uniform1f(loc, state.speed),
+              uStrength: (gl, loc) => gl.uniform1f(loc, state.strength),
+              uAmbient: (gl, loc) => gl.uniform1f(loc, state.ambient),
+              uOffset: (gl, loc) => gl.uniform1f(loc, state.offset),
+              uRadius: (gl, loc) => gl.uniform1f(loc, state.radius),
+              uNormalScale: (gl, loc) => gl.uniform1f(loc, state.normalScale),
+              uSpecLow: (gl, loc) => gl.uniform1f(loc, state.specLow),
+              uSpecHigh: (gl, loc) => gl.uniform1f(loc, state.specHigh),
+              uZoom: (gl, loc) => gl.uniform1f(loc, state.zoom),
+              uDrift: (gl, loc) => gl.uniform1f(loc, state.drift),
+              uCycleSpeed: (gl, loc) => gl.uniform1f(loc, state.cycleSpeed),
+              uCycleAmount: (gl, loc) => gl.uniform1f(loc, state.cycleAmount),
+              uGain: (gl, loc) => gl.uniform1f(loc, state.gain),
+              uGamma: (gl, loc) => gl.uniform1f(loc, state.gamma),
+              uAccentMix: (gl, loc) => gl.uniform1f(loc, state.accentMix),
+              uHueShift: (gl, loc) => gl.uniform1f(loc, state.hueShift),
+              uHuePulse: (gl, loc) => gl.uniform1f(loc, state.huePulse),
+              uSaturation: (gl, loc) => gl.uniform1f(loc, state.saturation),
+              uContrast: (gl, loc) => gl.uniform1f(loc, state.contrast),
+              uBrightness: (gl, loc) => gl.uniform1f(loc, state.brightness),
+              uPosterize: (gl, loc) => gl.uniform1f(loc, state.posterize),
+              uPosterizeMix: (gl, loc) => gl.uniform1f(loc, state.posterizeMix),
+              uGrain: (gl, loc) => gl.uniform1f(loc, state.grain),
+              uVignette: (gl, loc) => gl.uniform1f(loc, state.vignette),
+              uColor1: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c1);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uColor2: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c2);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uColor3: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c3);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uBase: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.bg);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uAccent: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.accent);
+                gl.uniform3f(loc, r, g, b);
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
