@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /content/
+Allow: /
+
+Sitemap: https://hectortayl.org/sitemap.xml
