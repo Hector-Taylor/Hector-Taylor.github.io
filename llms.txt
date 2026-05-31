@@ -2,7 +2,15 @@
 
 Canonical site: https://hectortayl.org/
 
-Hector Taylor is a Zurich-based PhD candidate working at the intersection of neuroscience, psychedelic research, virtual reality, embodiment, neuroimaging, and chronic pain.
+Hector Taylor is a Zurich-based PhD candidate working across psychedelic science, virtual reality, embodiment, chronic pain, and public-facing research community work.
+
+Public project themes:
+- Pain and body-specific perception.
+- Psilocybin, virtual reality, and embodied self-binding.
+- Embodied VR translation for chronic pain.
+- State x World x Task methodology.
+- PROZ and public-facing psychedelic-science community infrastructure in Zurich.
+- Hexocortex and AI-assisted research operations.
 
 Relevant links:
 - GitHub: https://github.com/Hector-Taylor
