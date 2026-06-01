@@ -116,11 +116,11 @@
       :root {
         color-scheme: only light;
         --ink: #17141c;
-        --muted: #615d6b;
         --paper: #f6f1e8;
-        --line: rgba(23, 20, 28, 0.16);
-        --soft: rgba(246, 241, 232, 0.78);
-        --accent: #8b261f;
+        --line: rgba(23, 20, 28, 0.26);
+        --veil: rgba(246, 241, 232, 0.54);
+        --veil-strong: rgba(246, 241, 232, 0.78);
+        --dark-glass: rgba(12, 10, 17, 0.28);
       }
 
       * {
@@ -128,14 +128,14 @@
       }
 
       html {
-        scroll-behavior: smooth;
-        background: var(--paper);
+        background: #050506;
       }
 
       body {
         margin: 0;
-        min-height: 100%;
-        background: var(--paper);
+        min-height: 100svh;
+        overflow: hidden;
+        background: #050506;
         color: var(--ink);
         font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         font-size: clamp(16px, 1.1vw, 18px);
@@ -145,7 +145,7 @@
       }
 
       body::selection {
-        background: rgba(139, 38, 31, 0.24);
+        background: rgba(246, 241, 232, 0.4);
       }
 
       #shader-web-background {
@@ -153,200 +153,342 @@
       }
 
       .shader-web-background-fallback {
-        background: #f6f1e8;
+        background: #050506;
         background-position: center;
         background-size: cover;
         background-attachment: fixed;
       }
 
-      .hero {
-        position: relative;
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .stage {
+        position: fixed;
+        inset: 0;
         z-index: 1;
-        min-height: 100svh;
-        isolation: isolate;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        padding: clamp(14px, 2vw, 24px);
         overflow: hidden;
       }
 
-      .hero::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        z-index: 1;
-        pointer-events: none;
-        background:
-          linear-gradient(90deg, rgba(246, 241, 232, 0.92), rgba(246, 241, 232, 0.58) 38%, rgba(246, 241, 232, 0.12) 72%),
-          linear-gradient(180deg, rgba(246, 241, 232, 0.28), rgba(246, 241, 232, 0.84));
-      }
-
-      .topbar {
+      .site-chrome {
         position: relative;
-        z-index: 2;
+        z-index: 5;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 20px;
-        padding: clamp(18px, 3vw, 36px) clamp(20px, 5vw, 72px);
-      }
-
-      .mark {
-        color: var(--ink);
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        text-decoration: none;
-        text-transform: uppercase;
-      }
-
-      nav {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
         gap: 14px;
       }
 
-      nav a,
-      .text-link {
-        color: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.12em;
+      .mark,
+      .nav-button,
+      .close-button {
+        min-height: 38px;
+        border: 1px solid rgba(23, 20, 28, 0.28);
+        border-radius: 999px;
+        padding: 9px 13px;
+        color: var(--ink);
+        background: rgba(246, 241, 232, 0.24);
+        backdrop-filter: blur(8px) saturate(1.2);
+        font-size: 11px;
+        font-weight: 650;
+        letter-spacing: 0.16em;
+        text-align: left;
         text-decoration: none;
         text-transform: uppercase;
+        transition:
+          background 180ms ease,
+          color 180ms ease,
+          transform 180ms ease;
       }
 
-      nav a {
-        padding-bottom: 4px;
-        border-bottom: 1px solid transparent;
-        transition: border-color 180ms ease, color 180ms ease;
+      .mark {
+        display: flex;
+        align-items: center;
       }
 
-      nav a:hover,
-      nav a:focus-visible,
-      .text-link:hover,
-      .text-link:focus-visible {
-        color: var(--accent);
-        border-color: currentColor;
+      .nav {
+        display: flex;
+        gap: 4px;
+        min-width: 0;
+        padding: 4px;
+        border: 1px solid rgba(23, 20, 28, 0.2);
+        border-radius: 999px;
+        background: rgba(246, 241, 232, 0.16);
+        backdrop-filter: blur(10px) saturate(1.2);
       }
 
-      .hero__content {
+      .nav-button {
+        min-width: 104px;
+        border-color: transparent;
+        background: transparent;
+        text-align: center;
+      }
+
+      .nav-button span {
+        display: block;
+        color: rgba(23, 20, 28, 0.52);
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .close-button {
+        text-align: right;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      body:not([data-active='home']) .close-button {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .nav-button:hover,
+      .nav-button:focus-visible,
+      .nav-button.is-active,
+      .close-button:hover,
+      .close-button:focus-visible,
+      .mark:hover,
+      .mark:focus-visible {
+        background: rgba(246, 241, 232, 0.58);
+        color: #050506;
+      }
+
+      .experience {
         position: relative;
-        z-index: 2;
-        width: min(760px, calc(100vw - 40px));
-        padding: clamp(72px, 12vh, 140px) 0 clamp(48px, 8vh, 84px);
-        margin-left: clamp(20px, 5vw, 72px);
+        min-height: 0;
       }
 
-      .kicker {
-        margin: 0 0 18px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.28em;
-        text-transform: uppercase;
+      .identity {
+        position: absolute;
+        left: clamp(12px, 4.6vw, 64px);
+        bottom: clamp(86px, 11vh, 138px);
+        z-index: 2;
+        width: min(940px, calc(100vw - 40px));
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(190px, 260px);
+        gap: clamp(22px, 4vw, 52px);
+        align-items: end;
+        transition:
+          transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1),
+          opacity 360ms ease;
+      }
+
+      body:not([data-active='home']) .identity {
+        transform: translate3d(-2vw, -9vh, 0) scale(0.72);
+        opacity: 0.14;
       }
 
       h1,
       h2,
-      h3 {
+      h3,
+      .panel-title {
         font-family: 'Bodoni Moda', Georgia, serif;
         font-weight: 700;
         letter-spacing: 0;
       }
 
       h1 {
-        max-width: 8.8ch;
+        max-width: 9.2ch;
         margin: 0;
-        font-size: clamp(64px, 13vw, 180px);
-        line-height: 0.82;
+        color: #17141c;
+        font-size: clamp(70px, 10.8vw, 148px);
+        line-height: 0.78;
+        text-shadow: 0 1px 22px rgba(246, 241, 232, 0.72);
         text-transform: uppercase;
       }
 
-      .hero__summary {
-        max-width: 46rem;
-        margin: clamp(26px, 4vw, 42px) 0 0;
-        font-size: clamp(20px, 2vw, 31px);
-        line-height: 1.18;
+      h1 span {
+        display: block;
       }
 
-      .hero__meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px 18px;
-        margin: 24px 0 0;
+      .kicker,
+      .meta-row,
+      .surface-kicker {
+        margin: 0;
+        color: rgba(23, 20, 28, 0.74);
+        font-size: 12px;
+        font-weight: 650;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .kicker {
+        margin-bottom: 18px;
+      }
+
+      .summary {
+        max-width: 39rem;
+        margin: clamp(20px, 3vw, 34px) 0 0;
+        color: #17141c;
+        font-size: clamp(19px, 1.72vw, 26px);
+        line-height: 1.22;
+        text-shadow: 0 1px 18px rgba(246, 241, 232, 0.82);
+      }
+
+      .meta-row {
+        display: grid;
+        gap: 12px;
+        margin: 0;
         padding: 0;
-        color: var(--muted);
         list-style: none;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
+        border-left: 1px solid rgba(23, 20, 28, 0.32);
+        padding-left: 18px;
+        backdrop-filter: blur(2px);
       }
 
-      .actions {
+      .meta-row li {
+        max-width: 24ch;
+      }
+
+      .meta-row span {
+        display: block;
+        margin-top: 3px;
+        color: rgba(23, 20, 28, 0.52);
+        font-size: 10px;
+        letter-spacing: 0.14em;
+      }
+
+      .project-actions,
+      .link-field {
         display: flex;
         flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 34px;
+        gap: 10px;
       }
 
-      .button {
+      .glass-button,
+      .project-button,
+      .link-field a {
         min-height: 44px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid rgba(23, 20, 28, 0.32);
+        border: 1px solid rgba(23, 20, 28, 0.38);
         border-radius: 999px;
-        padding: 12px 18px;
+        padding: 11px 17px;
         color: var(--ink);
-        background: rgba(246, 241, 232, 0.5);
-        font-size: 13px;
-        font-weight: 600;
+        background: rgba(246, 241, 232, 0.22);
+        font-size: 12px;
+        font-weight: 650;
         letter-spacing: 0.14em;
         text-decoration: none;
         text-transform: uppercase;
-        backdrop-filter: blur(8px);
-        transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+        backdrop-filter: blur(5px) saturate(1.3);
+        box-shadow: inset 0 0 0 1px rgba(246, 241, 232, 0.08);
+        transition:
+          background 180ms ease,
+          border-color 180ms ease,
+          transform 180ms ease;
       }
 
-      .button:hover,
-      .button:focus-visible {
+      .glass-button:hover,
+      .glass-button:focus-visible,
+      .project-button:hover,
+      .project-button:focus-visible,
+      .project-button.is-active,
+      .link-field a:hover,
+      .link-field a:focus-visible {
         transform: translateY(-2px);
         border-color: rgba(23, 20, 28, 0.72);
-        background: rgba(246, 241, 232, 0.8);
+        background: rgba(246, 241, 232, 0.52);
       }
 
-      main {
-        position: relative;
-        z-index: 3;
-        background: var(--paper);
+      .surface-stack {
+        position: absolute;
+        top: clamp(18px, 3vh, 34px);
+        right: clamp(6px, 3vw, 46px);
+        z-index: 4;
+        width: min(690px, calc(100vw - 32px));
+        height: min(760px, calc(100svh - 126px));
+        min-height: 520px;
+        pointer-events: none;
       }
 
-      .section {
-        width: min(1160px, calc(100vw - 40px));
-        margin: 0 auto;
-        padding: clamp(64px, 10vw, 124px) 0;
-        border-top: 1px solid var(--line);
+      .surface {
+        position: absolute;
+        inset: 0;
+        overflow: visible;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        opacity: 0;
+        transform: translate3d(7%, 2%, 0);
+        pointer-events: none;
+        transition:
+          opacity 340ms ease,
+          transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
       }
 
-      .section:first-child {
-        border-top: 0;
+      .surface.is-active {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        pointer-events: auto;
       }
 
-      .split {
+      .surface-inner {
+        min-height: 100%;
         display: grid;
-        grid-template-columns: minmax(180px, 0.75fr) minmax(0, 1.6fr);
-        gap: clamp(32px, 7vw, 96px);
+        align-content: start;
+        gap: 0;
+        padding: 0;
       }
 
-      h2 {
+      .surface-head,
+      .surface-copy,
+      .surface-inner > .project-actions,
+      .research-list,
+      .project-zone,
+      .link-field {
+        border: 1px solid rgba(23, 20, 28, 0.34);
+      }
+
+      .surface-head {
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: clamp(22px, 3vw, 36px);
+        background:
+          linear-gradient(135deg, rgba(246, 241, 232, 0.72), rgba(246, 241, 232, 0.32)),
+          rgba(196, 255, 198, 0.36);
+        backdrop-filter: blur(8px) saturate(1.08);
+      }
+
+      .surface[data-panel='research'] .surface-head {
+        background:
+          linear-gradient(135deg, rgba(246, 241, 232, 0.62), rgba(246, 241, 232, 0.28)),
+          rgba(255, 217, 236, 0.42);
+      }
+
+      .surface[data-panel='projects'] .surface-head {
+        background:
+          linear-gradient(135deg, rgba(246, 241, 232, 0.68), rgba(246, 241, 232, 0.28)),
+          rgba(218, 240, 255, 0.44);
+      }
+
+      .surface[data-panel='links'] .surface-head {
+        background:
+          linear-gradient(135deg, rgba(246, 241, 232, 0.72), rgba(246, 241, 232, 0.34)),
+          rgba(255, 237, 190, 0.42);
+      }
+
+      .panel-title {
         margin: 0;
-        font-size: clamp(34px, 5vw, 72px);
+        font-size: clamp(40px, 4.5vw, 68px);
         line-height: 0.95;
+        text-transform: uppercase;
       }
 
       h3 {
         margin: 0 0 8px;
-        font-size: clamp(22px, 2.4vw, 34px);
+        font-size: clamp(24px, 2.5vw, 36px);
         line-height: 1.05;
       }
 
@@ -354,248 +496,343 @@
         margin: 0;
       }
 
-      .lede {
-        max-width: 64rem;
-        font-size: clamp(20px, 2.1vw, 32px);
-        line-height: 1.25;
+      .surface-copy,
+      .project-detail p,
+      .research-list p {
+        color: rgba(23, 20, 28, 0.84);
+        font-size: clamp(17px, 1.35vw, 21px);
+        line-height: 1.38;
       }
 
-      .body-copy {
-        max-width: 56rem;
-        margin-top: 26px;
-        color: #36313e;
+      .surface-copy {
+        max-width: 48rem;
+        padding: 20px 22px;
+        background: rgba(246, 241, 232, 0.84);
+        backdrop-filter: blur(4px);
+        border-top: 0;
       }
 
-      .list {
+      .surface-inner > .project-actions {
+        gap: 0;
+        padding: 14px;
+        background: rgba(222, 246, 255, 0.72);
+        border-top: 0;
+      }
+
+      .surface-inner > .project-actions .glass-button {
+        margin-right: 10px;
+      }
+
+      .research-list,
+      .project-list {
         display: grid;
-        gap: 28px;
+        gap: 1px;
         margin: 0;
         padding: 0;
         list-style: none;
+        background: rgba(23, 20, 28, 0.22);
       }
 
-      .list li {
-        padding-top: 22px;
-        border-top: 1px solid var(--line);
+      .research-list li,
+      .project-detail {
+        padding: 16px 18px;
+        background: rgba(246, 241, 232, 0.84);
       }
 
-      .label {
-        margin-bottom: 8px;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.2em;
+      .research-list li:nth-child(2) {
+        background: rgba(221, 255, 226, 0.72);
+      }
+
+      .research-list li:nth-child(3) {
+        background: rgba(255, 226, 241, 0.68);
+      }
+
+      .research-list h3 {
+        font-size: clamp(23px, 2.2vw, 34px);
+      }
+
+      .research-list p {
+        font-size: clamp(16px, 1.15vw, 19px);
+      }
+
+      .project-zone {
+        display: grid;
+        grid-template-columns: 0.82fr 1.18fr;
+        gap: 1px;
+        background: rgba(23, 20, 28, 0.24);
+      }
+
+      .project-list {
+        background: transparent;
+        border: 0;
+        gap: 10px;
+      }
+
+      .project-button {
+        width: 100%;
+        min-height: 92px;
+        justify-content: flex-start;
+        border: 0;
+        border-radius: 0;
+        background: rgba(246, 241, 232, 0.86);
+        text-align: left;
+      }
+
+      .project-button:nth-child(2) {
+        background: rgba(255, 229, 239, 0.8);
+      }
+
+      .project-button:nth-child(3) {
+        background: rgba(222, 246, 255, 0.78);
+      }
+
+      .project-detail {
+        min-height: 320px;
+        overflow: auto;
+        border: 0;
+        background: rgba(246, 241, 232, 0.86);
+      }
+
+      .project-detail h3 {
+        font-size: clamp(32px, 3.7vw, 54px);
         text-transform: uppercase;
       }
 
-      .link-grid {
+      .link-field {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1px;
-        background: var(--line);
-        border: 1px solid var(--line);
       }
 
-      .link-grid a {
-        min-height: 110px;
-        display: flex;
-        align-items: flex-end;
+      .link-field a {
+        min-height: 96px;
         justify-content: space-between;
-        gap: 20px;
-        padding: 18px;
-        color: var(--ink);
-        background: var(--paper);
-        text-decoration: none;
-        transition: background 180ms ease, color 180ms ease;
+        border: 0;
+        border-radius: 0;
+        background: rgba(246, 241, 232, 0.84);
       }
 
-      .link-grid a:hover,
-      .link-grid a:focus-visible {
-        color: var(--accent);
-        background: #fff9ef;
+      .link-field a:nth-child(2),
+      .link-field a:nth-child(3) {
+        background: rgba(218, 255, 226, 0.72);
       }
 
-      .link-grid span:first-child {
-        font-size: clamp(20px, 2vw, 30px);
-        font-weight: 600;
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+        }
       }
 
-      .link-grid span:last-child {
-        flex: 0 0 auto;
-        color: var(--muted);
-        font-size: 12px;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-      }
+      @media (max-width: 860px) {
+        html,
+        body {
+          max-width: 100%;
+          overflow-x: hidden;
+        }
 
-      footer {
-        padding: 34px clamp(20px, 5vw, 72px) 52px;
-        color: var(--muted);
-        font-size: 12px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        background: var(--paper);
-      }
+        body {
+          overflow: auto;
+        }
 
-      @media (max-width: 760px) {
-        .topbar {
+        .stage {
+          position: relative;
+          width: 100%;
+          min-height: 100svh;
+          overflow: hidden;
+          gap: 18px;
+        }
+
+        .site-chrome {
           align-items: flex-start;
           flex-direction: column;
         }
 
-        nav {
-          justify-content: flex-start;
+        .nav {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          width: 100%;
+          border-radius: 22px;
+          overflow: hidden;
         }
 
-        .hero__content {
-          margin-left: 20px;
-          padding-top: 70px;
+        .nav-button {
+          min-width: 0;
+        }
+
+        .identity,
+        .surface-stack {
+          position: relative;
+          inset: auto;
+          width: 100%;
+          max-height: none;
+        }
+
+        body:not([data-active='home']) .identity {
+          transform: none;
+          opacity: 1;
+        }
+
+        .surface-stack {
+          min-height: 620px;
+        }
+
+        .identity {
+          display: block;
+        }
+
+        .meta-row {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px 14px;
+          border-left: 0;
+          padding-left: 0;
+          margin-top: 22px;
+        }
+
+        .summary {
+          max-width: 100%;
+        }
+
+        .glass-button {
+          min-width: 0;
+          padding-inline: 12px;
+        }
+
+        .panel-title {
+          font-size: clamp(34px, 12vw, 48px);
+        }
+
+        .project-zone,
+        .link-field {
+          grid-template-columns: 1fr;
         }
 
         h1 {
-          max-width: 100%;
-          font-size: clamp(52px, 17vw, 68px);
-        }
-
-        .split,
-        .link-grid {
-          grid-template-columns: 1fr;
+          font-size: clamp(54px, 17vw, 92px);
         }
       }
     </style>
   </head>
-  <body>
-    <section class="hero" aria-labelledby="home-title">
-      <header class="topbar">
-        <a class="mark" href="https://hectortayl.org/" aria-label="Hector Taylor home">Hector Taylor</a>
-        <nav aria-label="Primary navigation">
-          <a href="#about">About</a>
-          <a href="#research">Research</a>
-          <a href="#projects">Projects</a>
-          <a href="#links">Links</a>
+  <body data-active="home">
+    <div class="stage">
+      <header class="site-chrome">
+        <a class="mark" href="#" data-view="home" aria-label="Hector Taylor home">Hector Taylor</a>
+        <nav class="nav" aria-label="Primary navigation">
+          <button class="nav-button" type="button" data-view="about">About</button>
+          <button class="nav-button" type="button" data-view="research">Research</button>
+          <button class="nav-button" type="button" data-view="projects">Projects</button>
+          <button class="nav-button" type="button" data-view="links">Links</button>
         </nav>
+        <button class="close-button" type="button" data-view="home">Close</button>
       </header>
 
-      <div class="hero__content">
-        <p class="kicker">Zurich · neuroscience · virtual reality</p>
-        <h1 id="home-title">Hector Taylor</h1>
-        <p class="hero__summary">
-          I study how altered states, immersive technology and embodied perception can change the way people infer, own and act through their bodies.
-        </p>
-        <ul class="hero__meta" aria-label="Current focus areas">
-          <li>University of Zurich</li>
-          <li>Psychedelic research</li>
-          <li>Chronic pain</li>
-          <li>VR embodiment</li>
-        </ul>
-        <div class="actions">
-          <a class="button" href="#about">Read profile</a>
-          <a class="button" href="https://www.dapp.uzh.ch/en/cfpr/researchgroups/juniorresearchgroups/psychedelic-research-therapy-development/team/taylor.html">Lab profile</a>
-          <a class="button" href="https://github.com/Hector-Taylor" rel="me">GitHub</a>
-          <a class="button" href="https://ch.linkedin.com/in/hector-taylor-7999b5161" rel="me">LinkedIn</a>
-        </div>
-      </div>
-    </section>
+      <main class="experience" aria-labelledby="home-title">
+        <section class="identity">
+          <div class="identity-main">
+            <p class="kicker">Zurich · neuroscience · virtual reality</p>
+            <h1 id="home-title"><span>Hector</span><span>Taylor</span></h1>
+            <p class="summary">
+              I study how altered states, immersive technology and embodied perception can change the way people infer, own and act through their bodies.
+            </p>
+          </div>
+          <ul class="meta-row" aria-label="Current focus areas">
+            <li>PhD candidate<span>UZH / PUK Zurich</span></li>
+            <li>Body inference<span>ownership and action</span></li>
+            <li>Altered states<span>psychedelic science</span></li>
+            <li>Immersive methods<span>VR and chronic pain</span></li>
+          </ul>
+        </section>
 
-    <main>
-      <section class="section split" id="about" aria-labelledby="about-title">
-        <div>
-          <p class="label">About</p>
-          <h2 id="about-title">I am a researcher and builder in Zurich.</h2>
-        </div>
-        <div>
-          <p class="lede">
-            I am a PhD candidate in the Psychedelic Research and Therapy Development group at the University Hospital of Psychiatry Zurich / University of Zurich. My work sits at the intersection of psychedelic science, virtual reality, embodiment and chronic pain.
-          </p>
-          <p class="body-copy">
-            I am interested in how altered states change the way people infer, own and act through their bodies, and how immersive environments can be used to measure and potentially reshape that process. This site is my canonical home online for research updates, project notes, writing, publications, tools and experiments as they become ready to share.
-          </p>
-        </div>
-      </section>
+        <section class="surface-stack" aria-live="polite">
+          <article class="surface" data-panel="about" aria-labelledby="about-title">
+            <div class="surface-inner">
+              <div class="surface-head">
+                <p class="surface-kicker">About</p>
+                <h2 class="panel-title" id="about-title">Researcher and builder in Zurich.</h2>
+              </div>
+              <p class="surface-copy">
+                I am a PhD candidate in the Psychedelic Research and Therapy Development group at the University Hospital of Psychiatry Zurich / University of Zurich. My work sits at the intersection of psychedelic science, virtual reality, embodiment and chronic pain.
+              </p>
+              <p class="surface-copy">
+                This site is my canonical home online for research updates, project notes, writing, publications, tools and experiments as they become ready to share.
+              </p>
+              <div class="project-actions">
+                <a class="glass-button" href="https://www.dapp.uzh.ch/en/cfpr/researchgroups/juniorresearchgroups/psychedelic-research-therapy-development/team/taylor.html">Lab profile</a>
+                <a class="glass-button" href="https://ch.linkedin.com/in/hector-taylor-7999b5161" rel="me">LinkedIn</a>
+              </div>
+            </div>
+          </article>
 
-      <section class="section split" id="research" aria-labelledby="research-title">
-        <div>
-          <p class="label">Research</p>
-          <h2 id="research-title">From measurement to mechanism to translation.</h2>
-        </div>
-        <ul class="list">
-          <li>
-            <h3>Pain and body-specific perception</h3>
-            <p>
-              I study whether pain changes perception in a body-specific way, rather than merely making all sensory judgments noisier or more difficult.
-            </p>
-          </li>
-          <li>
-            <h3>Psilocybin, VR and embodied self-binding</h3>
-            <p>
-              I use immersive VR to test how psilocybin may alter embodied self-binding, especially when visual and proprioceptive body signals conflict.
-            </p>
-          </li>
-          <li>
-            <h3>Embodied VR for chronic pain translation</h3>
-            <p>
-              I am helping develop the clinical translation of this work toward chronic-pain populations, asking whether embodied VR can be designed as more than a distraction tool: as a way to retune maladaptive body representation over time.
-            </p>
-          </li>
-        </ul>
-      </section>
+          <article class="surface" data-panel="research" aria-labelledby="research-title">
+            <div class="surface-inner">
+              <div class="surface-head">
+                <p class="surface-kicker">Research</p>
+                <h2 class="panel-title" id="research-title">Measurement, mechanism, translation.</h2>
+              </div>
+              <ul class="research-list">
+                <li>
+                  <h3>Pain and body-specific perception</h3>
+                  <p>I study whether pain changes perception in a body-specific way, rather than merely making all sensory judgments noisier or more difficult.</p>
+                </li>
+                <li>
+                  <h3>Psilocybin, VR and embodied self-binding</h3>
+                  <p>I use immersive VR to test how psilocybin may alter embodied self-binding, especially when visual and proprioceptive body signals conflict.</p>
+                </li>
+                <li>
+                  <h3>Embodied VR for chronic pain translation</h3>
+                  <p>I am helping develop clinical translation toward chronic-pain populations, asking whether embodied VR can retune maladaptive body representation over time.</p>
+                </li>
+              </ul>
+            </div>
+          </article>
 
-      <section class="section split" id="projects" aria-labelledby="projects-title">
-        <div>
-          <p class="label">Projects</p>
-          <h2 id="projects-title">Projects connect research, method and public culture.</h2>
-        </div>
-        <ul class="list">
-          <li>
-            <h3>State x World x Task</h3>
-            <p>
-              A methodological framework for matching induced modes of consciousness with designed virtual worlds and specific therapeutic or experimental tasks. Safety and support conditions are part of the method, not an afterthought.
-            </p>
-          </li>
-          <li>
-            <h3>PROZ</h3>
-            <p>
-              Through PROZ, I help support public-facing psychedelic-science programming and community infrastructure in Zurich: speaker events, serious research conversations and the organizational systems that help the group work coherently.
-            </p>
-          </li>
-          <li>
-            <h3>Hexocortex and tools</h3>
-            <p>
-              I am building a personal research operating system for turning papers, transcripts, code, meetings and rough notes into durable project knowledge. Small public tools and experiments, including <a class="text-link" href="/shader-lab/">Shader Lab</a>, will live here as they are ready.
-            </p>
-          </li>
-        </ul>
-      </section>
+          <article class="surface" data-panel="projects" aria-labelledby="projects-title">
+            <div class="surface-inner">
+              <div class="surface-head">
+                <p class="surface-kicker">Projects</p>
+                <h2 class="panel-title" id="projects-title">Methods, culture, tools.</h2>
+              </div>
+              <div class="project-zone">
+                <div class="project-list" aria-label="Project selector">
+                  <button class="project-button is-active" type="button" data-project="swt">State x World x Task</button>
+                  <button class="project-button" type="button" data-project="proz">PROZ</button>
+                  <button class="project-button" type="button" data-project="hexocortex">Hexocortex and tools</button>
+                </div>
+                <div class="project-detail" aria-live="polite">
+                  <p class="surface-kicker" id="project-kicker">Project</p>
+                  <h3 id="project-title">State x World x Task</h3>
+                  <p id="project-copy">
+                    A methodological framework for matching induced modes of consciousness with designed virtual worlds and specific therapeutic or experimental tasks. Safety and support conditions are part of the method, not an afterthought.
+                  </p>
+                  <div class="project-actions">
+                    <a class="glass-button" id="project-link" href="/shader-lab/">Open related work</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
 
-      <section class="section split" id="links" aria-labelledby="links-title">
-        <div>
-          <p class="label">Verified links</p>
-          <h2 id="links-title">Other places to find Hector Taylor.</h2>
-        </div>
-        <div class="link-grid">
-          <a href="https://github.com/Hector-Taylor" rel="me">
-            <span>GitHub</span>
-            <span>Code</span>
-          </a>
-          <a href="https://ch.linkedin.com/in/hector-taylor-7999b5161" rel="me">
-            <span>LinkedIn</span>
-            <span>Profile</span>
-          </a>
-          <a href="https://www.dapp.uzh.ch/en/cfpr/researchgroups/juniorresearchgroups/psychedelic-research-therapy-development/team/taylor.html">
-            <span>UZH / DAPP</span>
-            <span>Lab profile</span>
-          </a>
-          <a href="https://www.aliusresearch.org/attendees.html">
-            <span>Alius</span>
-            <span>Academic bio</span>
-          </a>
-        </div>
-      </section>
-    </main>
+          <article class="surface" data-panel="links" aria-labelledby="links-title">
+            <div class="surface-inner">
+              <div class="surface-head">
+                <p class="surface-kicker">Verified links</p>
+                <h2 class="panel-title" id="links-title">Other places to find me.</h2>
+              </div>
+              <div class="link-field">
+                <a href="https://github.com/Hector-Taylor" rel="me"><span>GitHub</span><span>Code</span></a>
+                <a href="https://ch.linkedin.com/in/hector-taylor-7999b5161" rel="me"><span>LinkedIn</span><span>Profile</span></a>
+                <a href="https://www.dapp.uzh.ch/en/cfpr/researchgroups/juniorresearchgroups/psychedelic-research-therapy-development/team/taylor.html"><span>UZH / DAPP</span><span>Lab</span></a>
+                <a href="https://www.aliusresearch.org/attendees.html"><span>Alius</span><span>Bio</span></a>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
 
-    <footer>
-      <span>Hector Taylor · Zurich · hectortayl.org</span>
-    </footer>
+    </div>
 
     <script src="/assets/shader-web-background.min.js"></script>
 
@@ -604,80 +841,236 @@
 
       uniform vec2  iResolution;
       uniform float iTime;
+      uniform float uPoints;
+      uniform float uForce;
+      uniform float uRotation;
+      uniform float uSwirlFreq;
+      uniform float uSpeed;
+      uniform float uStrength;
+      uniform float uAmbient;
+      uniform float uOffset;
+      uniform float uRadius;
+      uniform float uNormalScale;
+      uniform float uSpecLow;
+      uniform float uSpecHigh;
+      uniform float uZoom;
+      uniform float uDrift;
+      uniform float uCycleSpeed;
+      uniform float uCycleAmount;
+      uniform float uGain;
+      uniform float uGamma;
+      uniform float uAccentMix;
+      uniform float uHueShift;
+      uniform float uHuePulse;
+      uniform float uSaturation;
+      uniform float uContrast;
+      uniform float uBrightness;
+      uniform float uPosterize;
+      uniform float uPosterizeMix;
+      uniform float uGrain;
+      uniform float uVignette;
+      uniform vec3 uColor1;
+      uniform vec3 uColor2;
+      uniform vec3 uColor3;
+      uniform vec3 uBase;
+      uniform vec3 uAccent;
+      uniform float uPromoMode;
+      uniform float uPromoReveal;
+      uniform float uPromoWarp;
+      uniform float uPromoFeather;
+      uniform float uPromoScale;
+      uniform float uPromoGlow;
+      uniform float uPromoX;
+      uniform float uPromoY;
+      uniform sampler2D uPromoTexture;
 
-      const vec2 DEMO_SIZE = vec2(320.0, 240.0);
-
-      vec3 palette(float index, float paletteIndex) {
-        float rFreq = 0.1;
-        float gFreq = 0.1;
-        float bFreq = 0.1;
-        float rPhase = 0.0;
-        float gPhase = 2.0;
-        float bPhase = 4.0;
-
-        if (paletteIndex > 0.5 && paletteIndex < 1.5) {
-          rFreq = 0.05;
-          gFreq = 0.1;
-          bFreq = 0.08;
-          gPhase = 0.0;
-          bPhase = 0.0;
-        } else if (paletteIndex > 1.5 && paletteIndex < 2.5) {
-          rFreq = 0.08;
-          gFreq = 0.05;
-          bFreq = 0.1;
-          rPhase = 4.0;
-          bPhase = 0.0;
-        } else if (paletteIndex > 2.5) {
-          rFreq = 0.1;
-          gFreq = 0.08;
-          bFreq = 0.05;
-        }
-
-        return vec3(
-          sin(rFreq * index + rPhase) * 0.5 + 0.5,
-          sin(gFreq * index + gPhase) * 0.5 + 0.5,
-          sin(bFreq * index + bPhase) * 0.5 + 0.5
-        );
+      float n21 (vec2 p)
+      {
+          return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
       }
 
-      vec3 plasmaColor(float colorIndex, float time) {
-        float cycle = floor(time / 15.0);
-        float segmentTime = mod(time, 15.0);
-        float activePalette = mod(cycle, 4.0);
-        float nextPalette = mod(activePalette + 1.0, 4.0);
-        float fade = smoothstep(12.0, 15.0, segmentTime);
-
-        vec3 oldColor = palette(colorIndex, activePalette);
-        vec3 newColor = palette(colorIndex, nextPalette);
-        return mix(oldColor, newColor, fade);
+      mat2 rotate (float a)
+      {
+          float s = sin(a);
+          float c = cos(a);
+          return mat2(c, -s, s, c);
       }
 
-      vec2 demoPixel(vec2 fragCoord) {
-        float coverScale = max(iResolution.x / DEMO_SIZE.x, iResolution.y / DEMO_SIZE.y);
-        vec2 coveredSize = DEMO_SIZE * coverScale;
-        vec2 coveredCoord = fragCoord - (iResolution - coveredSize) * 0.5;
-        return floor(coveredCoord / coverScale);
+      vec3 diffuseLight (vec2 uv, vec3 normals, vec3 pos, vec3 col)
+      {
+          vec3 dif = pos - vec3(uv, 0.);
+          vec3 dir = normalize(dif);
+          float intensity = 1. / length(dif);
+          float diffuse   = dot(normals, dir) * intensity;
+          return col * diffuse;
       }
 
-      void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-        vec2 p = demoPixel(fragCoord);
+      #define PI 3.14159265358979323846
+      #define RATIO iResolution.x / iResolution.y
+      #define MAX_POINTS 20
 
-        float speedGovernor = max(iTime, 150.0);
-        float speed = 0.7 + sin(speedGovernor * 0.5) * 0.2;
-        float t = speedGovernor * speed;
+      vec2 swirl (vec2 uv, float seed, inout float acc_frc, inout vec2 acc_rot)
+      {
+          float tm = iTime * .05 * uSpeed;
+          float n = n21(vec2(seed));
+          vec2 pnt = vec2(.5) + vec2(cos(tm + n * 423.1), sin(tm + n * 254.3) * .5);
 
-        float value =
-          sin(p.x / 16.0 + t) +
-          sin(p.y / 8.0 + t) +
-          sin((p.x + p.y) / 16.0 + t) +
-          sin(length(p) / 8.0 + t);
+          vec2  dif = uv - pnt;
+          float dis = length(dif);
+          float wave = cos(dis * uSwirlFreq + iTime * .2 * uSpeed);
+          float frc = smoothstep(.0, 1., exp(dis * -uForce) * (wave * .5 + .5));
+          float swl = frc * sin(tm + n * 624.8) * uRotation;
+          vec2  rot = dif * rotate(swl);
 
-        float baseIndex = floor(128.0 + 64.0 * value);
-        float cycleOffset = floor(iTime * 33.0);
-        float colorIndex = mod(baseIndex + cycleOffset, 256.0);
-        vec3 color = plasmaColor(colorIndex, iTime);
+          acc_frc += frc;
+          acc_rot += rot * frc;
+          return rot + pnt;
+      }
 
-        fragColor = vec4(color, 1.0);
+      vec3 cycleColor(vec3 a, vec3 b, float phase)
+      {
+          float t = .5 + .5 * sin(phase);
+          return mix(a, b, t);
+      }
+
+      vec3 rgb2hsv(vec3 c)
+      {
+          vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+          vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+          vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+          float d = q.x - min(q.w, q.y);
+          float e = 1.0e-10;
+          return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+      }
+
+      vec3 hsv2rgb(vec3 c)
+      {
+          vec3 p = abs(fract(c.xxx + vec3(0.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0);
+          return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y);
+      }
+
+      vec3 applyFx(vec3 col, vec2 uv)
+      {
+          float neutral =
+              abs(uHueShift) +
+              abs(uHuePulse) +
+              abs(uSaturation - 1.0) +
+              abs(uContrast - 1.0) +
+              abs(uBrightness) +
+              abs(uPosterizeMix) +
+              abs(uGrain) +
+              abs(uVignette);
+          if (neutral < 0.0001) return col;
+
+          vec3 hsv = rgb2hsv(max(col, vec3(0.0)));
+          hsv.x = fract(hsv.x + uHueShift + sin(iTime * (0.35 + uHuePulse * 4.0)) * (uHuePulse * 0.25));
+          hsv.y = clamp(hsv.y * uSaturation, 0.0, 1.0);
+          col = hsv2rgb(hsv);
+
+          col = (col - 0.5) * uContrast + 0.5;
+          col += uBrightness;
+
+          float steps = max(1.0, uPosterize);
+          vec3 poster = floor(max(col, vec3(0.0)) * steps) / steps;
+          col = mix(col, poster, uPosterizeMix);
+
+          float radial = length((uv - 0.5) * vec2(RATIO, 1.0));
+          float v = 1.0 - smoothstep(0.15, 0.95, radial);
+          col *= mix(1.0, v, uVignette);
+
+          float grain = (n21(uv * iResolution.xy + iTime * 37.0) - 0.5) * uGrain;
+          col += grain;
+
+          return max(col, vec3(0.0));
+      }
+
+      vec3 offsetLights (vec2 uv, vec3 normals)
+      {
+          float tm  = iTime * .1 * uSpeed;
+          vec3 pos  = vec3(.5, .5, 1.);
+
+          float o2 = 1. * uOffset;
+          float o3 = 2. * uOffset;
+
+          vec3 p1 = vec3(pos.x + cos(tm) * uRadius, pos.y + sin(tm + 0.) * uRadius, pos.z);
+          vec3 p2 = vec3(pos.x + cos(tm + o2) * uRadius, pos.y + sin(tm + o2) * uRadius, pos.z);
+          vec3 p3 = vec3(pos.x + cos(tm + o3) * uRadius, pos.y + sin(tm + o3) * uRadius, pos.z);
+
+          float cps = tm * 6.283 * max(0.001, uCycleSpeed);
+          vec3 c1 = mix(uColor1, cycleColor(uColor1, uColor2, cps + 0.0), uCycleAmount);
+          vec3 c2 = mix(uColor2, cycleColor(uColor2, uColor3, cps + 1.7), uCycleAmount);
+          vec3 c3 = mix(uColor3, cycleColor(uColor3, uColor1, cps + 3.4), uCycleAmount);
+
+          vec3 l1 = diffuseLight(uv, normals, p1, c1 * uStrength);
+          vec3 l2 = diffuseLight(uv, normals, p2, c2 * uStrength);
+          vec3 l3 = diffuseLight(uv, normals, p3, c3 * uStrength);
+
+          return l1 + l2 + l3 + (uBase * uAmbient);
+      }
+
+      vec4 samplePromo(vec2 uv, vec2 flow, float fieldStrength)
+      {
+          if (uPromoMode < 0.5) return vec4(0.0);
+
+          vec2 promoPos = vec2(uPromoX, uPromoY);
+          vec2 aspectUv = (uv - promoPos) * vec2(RATIO, 1.0);
+          vec2 promoUv = aspectUv / max(0.001, uPromoScale) + 0.5;
+          if (promoUv.x < 0.0 || promoUv.x > 1.0 || promoUv.y < 0.0 || promoUv.y > 1.0) return vec4(0.0);
+
+          vec2 warpNoise = vec2(
+              n21(promoUv * 12.7 + iTime * 0.11),
+              n21(promoUv.yx * 10.3 - iTime * 0.09)
+          ) - 0.5;
+          vec2 warpedUv = clamp(promoUv + flow * (0.02 + uPromoWarp * 0.09) + warpNoise * (0.015 + uPromoWarp * 0.02), 0.0, 1.0);
+          vec4 promo = texture2D(uPromoTexture, warpedUv);
+          if (promo.a < 0.001) return vec4(0.0);
+
+          float cardCenter = 1.0 - smoothstep(0.05, 0.78, length(promoUv - 0.5) * 1.45);
+          float revealField = cardCenter * 0.34 + fieldStrength * 0.46 + n21(promoUv * 18.0 + iTime * 0.05) * 0.2;
+          float revealThreshold = 1.18 - uPromoReveal * 1.3;
+          float feather = max(0.01, uPromoFeather);
+          float emergence = smoothstep(revealThreshold - feather, revealThreshold + feather, revealField);
+          float edgeBand = smoothstep(0.08, 0.85, emergence) * (1.0 - smoothstep(0.88, 1.0, emergence));
+          float alpha = promo.a * emergence;
+          vec3 glow = uAccent * edgeBand * uPromoGlow * 0.36;
+          return vec4(promo.rgb + glow, alpha);
+      }
+
+      void mainImage( out vec4 fragColor, in vec2 fragCoord )
+      {
+          vec2 uv = (fragCoord / iResolution.xy - .5) * vec2(RATIO, 1.) / max(0.001, uZoom) + .5;
+          uv += vec2(sin(iTime * .13), cos(iTime * .11)) * uDrift;
+
+          float acc_frc = .0;
+          vec2  acc_rot = vec2(0.);
+          vec2  sv = uv;
+          for (int i = 0; i < MAX_POINTS; i++) {
+              if (float(i) >= uPoints) break;
+              sv = swirl(sv, fract(float(i+1) * 123.45), acc_frc, acc_rot);
+          }
+
+          vec3 normal = normalize(vec3(acc_rot, max(1e-4, acc_frc * uNormalScale)));
+
+          vec3 diffuse   = offsetLights(uv, normal);
+          vec3 specular  = smoothstep(uSpecLow, uSpecHigh, diffuse);
+          vec3 light     = diffuse + specular;
+
+          vec3 col = light + sin(light * PI) - light;
+          col *= uGain;
+
+          float iAvg = clamp((col.r + col.g + col.b) / 3., 0., 1.);
+          col = mix(col, uAccent, uAccentMix * smoothstep(.45, 1.2, iAvg));
+          col = pow(max(col, vec3(0.0)), vec3(1.0 / max(0.001, uGamma)));
+          col = applyFx(col, uv);
+
+          float flowStrength = clamp(acc_frc / max(1.0, uPoints), 0.0, 1.0);
+          float swirlStrength = clamp(length(acc_rot) * 3.5, 0.0, 1.0);
+          vec2 flow = acc_rot * 0.3;
+          vec4 promo = samplePromo(uv, flow, clamp(flowStrength * 0.65 + swirlStrength * 0.35, 0.0, 1.0));
+          col = mix(col, promo.rgb, promo.a);
+
+          fragColor = vec4(col,1.0);
       }
 
       void main() {
@@ -686,16 +1079,215 @@
     </script>
 
     <script>
+      const state = {
+        mode: 'shader',
+        points: 6,
+        force: 2,
+        rotation: 4,
+        swirlFreq: 10,
+        speed: 1,
+        zoom: 1,
+        drift: 0,
+        strength: 0.5,
+        ambient: 0.5,
+        offset: 1.3,
+        radius: 1,
+        normalScale: 0.01,
+        specLow: 0.85,
+        specHigh: 0.95,
+        cycleSpeed: 0,
+        cycleAmount: 0,
+        gain: 1,
+        gamma: 1,
+        accentMix: 0,
+        hueShift: 0,
+        huePulse: 0,
+        saturation: 1,
+        contrast: 1,
+        brightness: 0,
+        posterize: 32,
+        posterizeMix: 0,
+        grain: 0,
+        vignette: 0,
+        c1: '#ff0000',
+        c2: '#00ff00',
+        c3: '#0000ff',
+        bg: '#ffffff',
+        accent: '#ff49a8',
+        promoBadge: 'PROZ LAB',
+        promoHeadline: 'The next shader drop condenses out of the noise.',
+        promoBody: 'Square social card, branded image, and type locked inside the same fluid field.',
+        promoCta: 'See the reveal',
+        promoReveal: 0.62,
+        promoWarp: 0.34,
+        promoFeather: 0.16,
+        promoScale: 0.38,
+        promoGlow: 0.46,
+        promoX: 0.72,
+        promoY: 0.52,
+      };
+
+      function hexToRgb01(hex) {
+        const h = hex.replace('#', '');
+        const v = parseInt(h, 16);
+        return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+      }
+
+      const transparentTextureState = { gl: null, texture: null };
+
+      function ensureTransparentTexture(gl) {
+        if (transparentTextureState.gl === gl && transparentTextureState.texture) return;
+        transparentTextureState.gl = gl;
+        transparentTextureState.texture = gl.createTexture();
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, transparentTextureState.texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 0]));
+      }
+
       shaderWebBackground.shade({
         shaders: {
           Image: {
             uniforms: {
               iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height),
               iTime: (gl, loc) => gl.uniform1f(loc, performance.now() / 1000),
+              uPoints: (gl, loc) => gl.uniform1f(loc, state.points),
+              uForce: (gl, loc) => gl.uniform1f(loc, state.force),
+              uRotation: (gl, loc) => gl.uniform1f(loc, state.rotation),
+              uSwirlFreq: (gl, loc) => gl.uniform1f(loc, state.swirlFreq),
+              uSpeed: (gl, loc) => gl.uniform1f(loc, state.speed),
+              uStrength: (gl, loc) => gl.uniform1f(loc, state.strength),
+              uAmbient: (gl, loc) => gl.uniform1f(loc, state.ambient),
+              uOffset: (gl, loc) => gl.uniform1f(loc, state.offset),
+              uRadius: (gl, loc) => gl.uniform1f(loc, state.radius),
+              uNormalScale: (gl, loc) => gl.uniform1f(loc, state.normalScale),
+              uSpecLow: (gl, loc) => gl.uniform1f(loc, state.specLow),
+              uSpecHigh: (gl, loc) => gl.uniform1f(loc, state.specHigh),
+              uZoom: (gl, loc) => gl.uniform1f(loc, state.zoom),
+              uDrift: (gl, loc) => gl.uniform1f(loc, state.drift),
+              uCycleSpeed: (gl, loc) => gl.uniform1f(loc, state.cycleSpeed),
+              uCycleAmount: (gl, loc) => gl.uniform1f(loc, state.cycleAmount),
+              uGain: (gl, loc) => gl.uniform1f(loc, state.gain),
+              uGamma: (gl, loc) => gl.uniform1f(loc, state.gamma),
+              uAccentMix: (gl, loc) => gl.uniform1f(loc, state.accentMix),
+              uHueShift: (gl, loc) => gl.uniform1f(loc, state.hueShift),
+              uHuePulse: (gl, loc) => gl.uniform1f(loc, state.huePulse),
+              uSaturation: (gl, loc) => gl.uniform1f(loc, state.saturation),
+              uContrast: (gl, loc) => gl.uniform1f(loc, state.contrast),
+              uBrightness: (gl, loc) => gl.uniform1f(loc, state.brightness),
+              uPosterize: (gl, loc) => gl.uniform1f(loc, state.posterize),
+              uPosterizeMix: (gl, loc) => gl.uniform1f(loc, state.posterizeMix),
+              uGrain: (gl, loc) => gl.uniform1f(loc, state.grain),
+              uVignette: (gl, loc) => gl.uniform1f(loc, state.vignette),
+              uPromoMode: (gl, loc) => gl.uniform1f(loc, 0),
+              uPromoReveal: (gl, loc) => gl.uniform1f(loc, state.promoReveal),
+              uPromoWarp: (gl, loc) => gl.uniform1f(loc, state.promoWarp),
+              uPromoFeather: (gl, loc) => gl.uniform1f(loc, state.promoFeather),
+              uPromoScale: (gl, loc) => gl.uniform1f(loc, state.promoScale),
+              uPromoGlow: (gl, loc) => gl.uniform1f(loc, state.promoGlow),
+              uPromoX: (gl, loc) => gl.uniform1f(loc, state.promoX),
+              uPromoY: (gl, loc) => gl.uniform1f(loc, state.promoY),
+              uPromoTexture: (gl, loc) => {
+                ensureTransparentTexture(gl);
+                gl.uniform1i(loc, 0);
+              },
+              uColor1: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c1);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uColor2: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c2);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uColor3: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.c3);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uBase: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.bg);
+                gl.uniform3f(loc, r, g, b);
+              },
+              uAccent: (gl, loc) => {
+                const [r, g, b] = hexToRgb01(state.accent);
+                gl.uniform3f(loc, r, g, b);
+              },
             },
           },
         },
       });
+
+      const projectData = {
+        swt: {
+          title: 'State x World x Task',
+          copy: 'A methodological framework for matching induced modes of consciousness with designed virtual worlds and specific therapeutic or experimental tasks. Safety and support conditions are part of the method, not an afterthought.',
+          href: '/shader-lab/',
+        },
+        proz: {
+          title: 'PROZ',
+          copy: 'Public-facing psychedelic-science programming and community infrastructure in Zurich: speaker events, serious research conversations and the organizational systems that help the group work coherently.',
+          href: 'https://www.proz.com/',
+        },
+        hexocortex: {
+          title: 'Hexocortex and tools',
+          copy: 'A personal research operating system for turning papers, transcripts, code, meetings and rough notes into durable project knowledge. Small public tools and experiments live here as they become ready.',
+          href: '/shader-lab/',
+        },
+      };
+
+      const body = document.body;
+      const panels = Array.from(document.querySelectorAll('[data-panel]'));
+      const navButtons = Array.from(document.querySelectorAll('[data-view]'));
+      const projectButtons = Array.from(document.querySelectorAll('[data-project]'));
+      const projectTitle = document.getElementById('project-title');
+      const projectCopy = document.getElementById('project-copy');
+      const projectLink = document.getElementById('project-link');
+
+      function setView(view) {
+        const nextView = view === 'home' ? 'home' : view;
+        body.dataset.active = nextView;
+        panels.forEach((panel) => {
+          panel.classList.toggle('is-active', panel.dataset.panel === nextView);
+        });
+        navButtons.forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.view === nextView);
+        });
+      }
+
+      function setProject(projectKey) {
+        const project = projectData[projectKey];
+        if (!project) return;
+        projectTitle.textContent = project.title;
+        projectCopy.textContent = project.copy;
+        projectLink.href = project.href;
+        projectButtons.forEach((button) => {
+          button.classList.toggle('is-active', button.dataset.project === projectKey);
+        });
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const view = button.dataset.view;
+          if (!view) return;
+          event.preventDefault();
+          setView(view);
+        });
+      });
+
+      projectButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          setProject(button.dataset.project);
+        });
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') setView('home');
+      });
+
+      setView('home');
+      setProject('swt');
     </script>
   </body>
 </html>
