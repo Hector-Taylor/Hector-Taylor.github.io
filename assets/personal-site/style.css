@@ -71,14 +71,20 @@ a:focus-visible, button:focus-visible, .cv-pages:focus-visible {
   opacity: .7;
 }
 .optical-field.is-ready .field-fallback { display: none; }
-.donut-caption {
+.donut-footer {
   position: absolute;
   inset: auto var(--gutter) max(26px, env(safe-area-inset-bottom));
-  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.5;
 }
+.donut-footer p { margin: 0; }
+.donut-footer a { flex-shrink: 0; color: var(--ink); }
+.donut-footer a:hover { text-decoration: underline; text-underline-offset: 5px; }
 h1 {
   position: absolute;
   left: var(--gutter);
