@@ -71,6 +71,14 @@ a:focus-visible, button:focus-visible, .cv-pages:focus-visible {
   opacity: .7;
 }
 .optical-field.is-ready .field-fallback { display: none; }
+.donut-caption {
+  position: absolute;
+  inset: auto var(--gutter) max(26px, env(safe-area-inset-bottom));
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
 h1 {
   position: absolute;
   left: var(--gutter);
